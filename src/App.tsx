@@ -9,7 +9,6 @@ import Timeline, {
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
 import { Offcanvas, Tooltip } from 'bootstrap';
-import { get } from 'http';
 
 const App = () => {
 
@@ -64,6 +63,7 @@ const App = () => {
     })))
   }, [events])
 
+
   return (
     <div>
       <NavBar />
@@ -78,6 +78,24 @@ const App = () => {
             itemHeightRatio={0.75}
             groupRenderer={({ group }) => {
               return <div style={{ paddingLeft: '16px' }}>{group.title}</div>
+            }}
+            itemRenderer={({ item,
+              itemContext,
+              getItemProps,
+            }) => {
+
+              return (
+                <div {...getItemProps(item.itemProps)} data-bs-toggle="tooltip" data-bs-placement="top" title={itemContext.title}>
+
+                  <div
+                    className="rct-item-content"
+                    style={{ maxHeight: `${itemContext.dimensions.height}` }}
+                  >
+                    {itemContext.title}
+                  </div>
+
+                </div>
+              )
             }}
             minZoom={1000 * 60 * 60 * 24 * 6}
             maxZoom={1000 * 60 * 60 * 24 * 21}
