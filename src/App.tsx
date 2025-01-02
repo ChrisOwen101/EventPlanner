@@ -9,7 +9,6 @@ import Timeline, {
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
 import { Offcanvas, Tooltip } from 'bootstrap';
-import { get } from 'http';
 
 const App = () => {
 
