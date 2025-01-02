@@ -9,37 +9,60 @@ import Timeline, {
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
 import { Offcanvas, Tooltip } from 'bootstrap';
+import { get } from 'http';
 
 const App = () => {
 
   const [events, setEvents] = useState<Location[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [search, setSearch] = useState<string>('');
+
+  console.log()
 
   useEffect(() => {
     const fetchData = async () => {
       const events = await getEventsFromSheet()
       setEvents(events)
+      console.log(events)
     };
     fetchData();
   }, [])
+
+  const getFilteredEvents = () => {
+    if (search === '') {
+      return events
+    }
+
+    const filtered = events.map((location) => {
+      return {
+        ...location,
+        events: location.events.filter((event) => {
+          return event.name.toLowerCase().includes(search.toLowerCase())
+        })
+      }
+    }).filter((location) => location.events.length > 0)
+
+    return filtered
+
+  }
 
   useEffect(() => {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new Tooltip(tooltipTriggerEl)
     })
-  }, [events])
+  }, [events, search])
 
   const getGroups = useCallback(() => {
-    return events.map((location) => ({
+    return getFilteredEvents().map((location) => ({
       id: location.id,
       title: location.name,
       stackItems: true
     }))
-  }, [events])
+  }, [events, search])
 
   const getItems = useCallback(() => {
-    return events.flatMap((location) => location.events.map((event) => ({
+    return getFilteredEvents().flatMap((location) => location.events.map((event) => ({
       id: event.id,
       group: location.id,
       title: event.name,
@@ -61,13 +84,24 @@ const App = () => {
         }
       }
     })))
-  }, [events])
+  }, [events, search])
 
+  const getNoEventsFound = () => {
+    return <div className="alert alert-warning" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
+      <h6>No events could be found for the search term "{search}"</h6>
+    </div>
+  }
+
+  const groups = getGroups();
+  const items = getItems();
+  const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
 
   return (
     <div>
-      <NavBar />
-      {events.length === 0 ? <div>Loading...</div> :
+      <NavBar onSearch={(search) => {
+        setSearch(search);
+      }} />
+      {events.length === 0 ? <div>Loading...</div> : noEventsSearched ? getNoEventsFound() :
         <div style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e0e0e0' }}>
           <Timeline
             groups={getGroups()}
@@ -132,9 +166,9 @@ const App = () => {
                   <p><strong>Location:</strong> {selectedEvent.location}</p>
                   <p><strong>Cost:</strong> {selectedEvent.cost}</p>
                   <p><strong>Description:</strong> {selectedEvent.description}</p>
-                  <p><strong>Start:</strong> {selectedEvent.start.format('MMMM Do YYYY, h:mm:ss a')}</p>
-                  <p><strong>End:</strong> {selectedEvent.end.format('MMMM Do YYYY, h:mm:ss a')}</p>
-                  <p><strong>URL:</strong> <a href={selectedEvent.url} target="_blank" rel="noopener noreferrer">{selectedEvent.url}</a></p>
+                  <p><strong>Start:</strong> {selectedEvent.start.format('MMMM Do YYYY')}</p>
+                  <p><strong>End:</strong> {selectedEvent.end.format('MMMM Do YYYY')}</p>
+                  <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>Go to Event</button>
                 </div>
               )}
             </div>
