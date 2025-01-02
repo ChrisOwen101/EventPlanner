@@ -8,7 +8,7 @@ import Timeline, {
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
-import { Offcanvas } from 'bootstrap';
+import { Offcanvas, Tooltip } from 'bootstrap';
 
 const App = () => {
 
@@ -22,6 +22,13 @@ const App = () => {
     };
     fetchData();
   }, [])
+
+  useEffect(() => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new Tooltip(tooltipTriggerEl)
+    })
+  }, [events])
 
   const getGroups = useCallback(() => {
     return events.map((location) => ({
@@ -66,7 +73,7 @@ const App = () => {
             groups={getGroups()}
             items={getItems()}
             defaultTimeStart={moment().add(-1, 'day').valueOf()}
-            defaultTimeEnd={moment().add(3, 'week').valueOf()}
+            defaultTimeEnd={moment().add(3, 'month').valueOf()}
             lineHeight={40}
             itemHeightRatio={0.75}
             groupRenderer={({ group }) => {
