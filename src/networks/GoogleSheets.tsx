@@ -3,7 +3,8 @@ import moment from "moment";
 export interface Event {
     id: number;
     name: string;
-    location: 'London' | 'Manchester' | 'Glasgow' | 'Liverpool' | 'Birmingham';
+    cost: string
+    location: string;
     url: string;
     description?: string;
     start: moment.Moment;
@@ -12,13 +13,14 @@ export interface Event {
 
 export interface Location {
     id: number;
-    name: Event['location'];
+    name: string;
     events: Event[];
 }
 
 export interface SheetRow {
     id: string;
     name: string;
+    cost: string;
     location: string;
     description: string;
     url: string;
@@ -47,7 +49,8 @@ export async function getEventsFromSheet(): Promise<Location[]> {
         return {
             id: parseInt(row.id),
             name: row.name,
-            location: row.location as Event['location'],
+            cost: row.cost,
+            location: row.location,
             url: row.url,
             description: row.description,
             start: moment(row.start, "DD/MM/YYYY HH:mm:ss"),
@@ -58,11 +61,12 @@ export async function getEventsFromSheet(): Promise<Location[]> {
     const events = rows.slice(1).map((row: string[]): Event => parseRow({
         id: row[0],
         name: row[1],
-        location: row[2],
-        url: row[3],
-        description: row[4],
-        start: row[5],
-        end: row[6],
+        cost: row[2],
+        location: row[3],
+        url: row[4],
+        description: row[5],
+        start: row[6],
+        end: row[7],
     }));
 
     return groupByLocation(events)
