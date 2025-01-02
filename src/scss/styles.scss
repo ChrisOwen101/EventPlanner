@@ -13,5 +13,7 @@ $medium: #7eac86;
 $low: #b2cdb7;
 $informational: #e5eee7;
 
+$offcanvas-horizontal-width: min(600px, 100%);
+
 // Import Bootstrap and custom styles
 @import "bootstrap/scss/bootstrap";
