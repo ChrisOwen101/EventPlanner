@@ -7,11 +7,13 @@ import Timeline, {
   DateHeader
 } from 'react-calendar-timeline'
 import moment from 'moment'
-import { getEventsFromSheet, Location, } from './networks/GoogleSheets';
+import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
+import { Offcanvas } from 'bootstrap';
 
 const App = () => {
 
   const [events, setEvents] = useState<Location[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +41,7 @@ const App = () => {
       canMove: false,
       canResize: false,
       canChangeGroup: false,
-      url: event.url,
+      event: event,
       itemProps: {
         style: {
           background: '#53815c',
@@ -73,9 +75,14 @@ const App = () => {
             minZoom={1000 * 60 * 60 * 24 * 14}
             maxZoom={1000 * 60 * 60 * 24 * 14}
             onItemSelect={(itemId: number) => {
-              const item = getItems().find(item => item.id === itemId)
+              const item = getItems().find(item => item.id === itemId);
               if (item) {
-                window.open(item.url)
+                setSelectedEvent(item.event);
+                const offcanvasElement = document.getElementById('offcanvasExample');
+                if (offcanvasElement) {
+                  const offcanvas = new Offcanvas(offcanvasElement);
+                  offcanvas.show();
+                }
               }
             }}
           >
@@ -89,6 +96,23 @@ const App = () => {
               <DateHeader className='header' />
             </TimelineHeaders>
           </Timeline>
+          <div className="offcanvas offcanvas-start" tabIndex={-1} id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div className="offcanvas-header">
+              <h5 className="offcanvas-title" id="offcanvasExampleLabel">{selectedEvent?.name}</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div className="offcanvas-body">
+              {selectedEvent && (
+                <div>
+                  <p><strong>Location:</strong> {selectedEvent.location}</p>
+                  <p><strong>Description:</strong> {selectedEvent.description}</p>
+                  <p><strong>Start:</strong> {selectedEvent.start.format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p><strong>End:</strong> {selectedEvent.end.format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p><strong>URL:</strong> <a href={selectedEvent.url} target="_blank" rel="noopener noreferrer">{selectedEvent.url}</a></p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       }
 
