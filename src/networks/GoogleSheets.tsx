@@ -43,8 +43,6 @@ export async function getEventsFromSheet(): Promise<Location[]> {
         return [];
     }
 
-    console.log(rows);
-
     function parseRow(row: SheetRow): Event {
         return {
             id: parseInt(row.id),
@@ -58,16 +56,21 @@ export async function getEventsFromSheet(): Promise<Location[]> {
         };
     }
 
-    const events = rows.slice(1).map((row: string[]): Event => parseRow({
-        id: row[0],
-        name: row[1],
-        cost: row[2],
-        location: row[3],
-        url: row[4],
-        description: row[5],
-        start: row[6],
-        end: row[7],
-    }));
+    const events: Event[] = rows
+        .slice(1)
+        .filter((row: string[]) => row.length > 1)
+        .map((row: string[]): Event => parseRow({
+            id: row[0],
+            name: row[1],
+            cost: row[2],
+            location: row[3],
+            url: row[4],
+            description: row[5],
+            start: row[6],
+            end: row[7],
+        }));
+
+    console.log(events)
 
     return groupByLocation(events)
 }
