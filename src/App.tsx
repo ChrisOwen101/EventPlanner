@@ -72,8 +72,8 @@ const App = () => {
             groupRenderer={({ group }) => {
               return <div style={{ paddingLeft: '16px' }}>{group.title}</div>
             }}
-            minZoom={1000 * 60 * 60 * 24 * 14}
-            maxZoom={1000 * 60 * 60 * 24 * 14}
+            minZoom={1000 * 60 * 60 * 24 * 6}
+            maxZoom={1000 * 60 * 60 * 24 * 21}
             onItemSelect={(itemId: number) => {
               const item = getItems().find(item => item.id === itemId);
               if (item) {
