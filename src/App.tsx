@@ -92,6 +92,12 @@ const App = () => {
     </div>
   }
 
+  const getLoading = () => {
+    return <div className="alert alert-secondary" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
+      <h5>Loading...</h5>
+    </div>
+  }
+
   const groups = getGroups();
   const items = getItems();
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
@@ -101,7 +107,7 @@ const App = () => {
       <NavBar onSearch={(search) => {
         setSearch(search);
       }} />
-      {events.length === 0 ? <div>Loading...</div> : noEventsSearched ? getNoEventsFound() :
+      {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
         <div style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e0e0e0' }}>
           <Timeline
             groups={getGroups()}

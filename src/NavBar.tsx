@@ -2,7 +2,7 @@ function NavBar({ onSearch }: { onSearch: (search: string) => void }) {
     return (
         <nav className="navbar bg-primary navbar-expand-lg" data-bs-theme="dark" style={{ margin: '24px', padding: '12px', borderRadius: '12px' }}>
             <div className="container-fluid">
-                <span className="navbar-brand mb-0 h1">
+                <span className="navbar-brand mb-0">
                     London Event Planner
                 </span>
                 <div className="collapse navbar-collapse">
