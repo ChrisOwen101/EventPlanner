@@ -112,6 +112,7 @@ const App = () => {
               {selectedEvent && (
                 <div>
                   <p><strong>Location:</strong> {selectedEvent.location}</p>
+                  <p><strong>Cost:</strong> {selectedEvent.cost}</p>
                   <p><strong>Description:</strong> {selectedEvent.description}</p>
                   <p><strong>Start:</strong> {selectedEvent.start.format('MMMM Do YYYY, h:mm:ss a')}</p>
                   <p><strong>End:</strong> {selectedEvent.end.format('MMMM Do YYYY, h:mm:ss a')}</p>
