@@ -1,6 +1,3 @@
-
-import { NavLink } from 'react-router-dom';
-
 function NavBar() {
     return (
         <nav className="navbar bg-primary navbar-expand-lg" data-bs-theme="dark" style={{ margin: '24px', padding: '12px', borderRadius: '12px' }}>

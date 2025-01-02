@@ -1,5 +1,5 @@
 import './App.css'
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import NavBar from './NavBar';
 import Timeline from 'react-calendar-timeline'
 import moment from 'moment'
