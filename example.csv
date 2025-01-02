@@ -1,0 +1,51 @@
+ID,NAME,LOCATION,URL,START,END
+1,London Tech Conference 2025,London,www.londontechconf2025.co.uk,05/01/2025 09:00:00,07/01/2025 17:00:00
+2,Manchester Music Festival,Manchester,www.manchestermusicfest.co.uk,10/01/2025 12:00:00,12/01/2025 23:00:00
+3,Glasgow Art Exhibition,Glasgow,www.glasgowartexhibition.org.uk,15/01/2025 10:00:00,20/01/2025 18:00:00
+4,Liverpool Business Summit,Liverpool,www.liverpoolbusinesssummit.co.uk,22/01/2025 09:00:00,23/01/2025 17:00:00
+5,Birmingham Culinary Workshop,Birmingham,www.birminghamculinaryworkshop.com,25/01/2025 10:00:00,25/01/2025 16:00:00
+6,London Education Fair,London,www.londoneducationfair.co.uk,28/01/2025 09:00:00,31/01/2025 17:00:00
+7,Manchester Book Festival,Manchester,www.manchesterbookfest.co.uk,02/02/2025 10:00:00,05/02/2025 18:00:00
+8,Glasgow Fitness Expo,Glasgow,www.glasgowfitexpo.co.uk,08/02/2025 09:00:00,09/02/2025 17:00:00
+9,Liverpool Photography Workshop,Liverpool,www.liverpoolphotoworkshop.co.uk,12/02/2025 09:00:00,12/02/2025 17:00:00
+10,Birmingham Fashion Week,Birmingham,www.birminghamfashionweek.co.uk,15/02/2025 11:00:00,19/02/2025 21:00:00
+11,London Science Symposium,London,www.londonsciencesymposium.co.uk,20/02/2025 09:00:00,22/02/2025 17:00:00
+12,Manchester Health Conference,Manchester,www.manchesterhealthconf.co.uk,24/02/2025 09:00:00,26/02/2025 17:00:00
+13,Glasgow Sports Festival,Glasgow,www.glasgowsportsfest.co.uk,28/02/2025 10:00:00,03/03/2025 18:00:00
+14,Liverpool Gaming Convention,Liverpool,www.liverpoolgamingcon.co.uk,05/03/2025 09:00:00,07/03/2025 22:00:00
+15,Birmingham Film Festival,Birmingham,www.birminghamfilmfest.co.uk,09/03/2025 12:00:00,14/03/2025 23:00:00
+16,London Environment Forum,London,www.londonenvforum.co.uk,16/03/2025 09:00:00,16/03/2025 17:00:00
+17,Manchester Finance Summit,Manchester,www.manchesterfinancesummit.co.uk,18/03/2025 09:00:00,20/03/2025 17:00:00
+18,Glasgow Automotive Expo,Glasgow,www.glasgowautoexpo.co.uk,22/03/2025 10:00:00,24/03/2025 18:00:00
+19,Liverpool Architecture Symposium,Liverpool,www.liverpoolarchsymposium.co.uk,26/03/2025 09:00:00,27/03/2025 17:00:00
+20,Birmingham Travel Show,Birmingham,www.birminghamtravelshow.co.uk,29/03/2025 10:00:00,31/03/2025 18:00:00
+21,London Innovation Convention,London,www.londoninnovationcon.co.uk,02/04/2025 09:00:00,04/04/2025 17:00:00
+22,Manchester Marketing Summit,Manchester,www.manchestermarketingsummit.co.uk,05/01/2025 09:00:00,06/01/2025 17:00:00
+23,Glasgow Real Estate Expo,Glasgow,www.glasgowrealestateexpo.co.uk,08/01/2025 09:00:00,10/01/2025 17:00:00
+24,Liverpool Medical Conference,Liverpool,www.liverpoolmedconf.co.uk,12/01/2025 09:00:00,14/01/2025 17:00:00
+25,Birmingham Law Symposium,Birmingham,www.birminghamlawsymposium.co.uk,16/01/2025 09:00:00,16/01/2025 17:00:00
+26,London Agriculture Fair,London,www.londonagfair.co.uk,18/01/2025 09:00:00,23/01/2025 17:00:00
+27,Manchester Food Festival,Manchester,www.manchesterfoodfest.co.uk,25/01/2025 10:00:00,28/01/2025 20:00:00
+28,Glasgow Wellness Retreat,Glasgow,www.glasgowwellnessretreat.co.uk,30/01/2025 09:00:00,05/02/2025 17:00:00
+29,Liverpool Tech Meetup,Liverpool,www.liverpooltechmeetup.co.uk,07/02/2025 18:00:00,07/02/2025 21:00:00
+30,Birmingham Startup Expo,Birmingham,www.birminghamstartupexpo.co.uk,09/02/2025 09:00:00,11/02/2025 17:00:00
+31,London Art & Design Week,London,www.londonartdesignweek.co.uk,13/02/2025 09:00:00,19/02/2025 17:00:00
+32,Manchester Business Expo,Manchester,www.manchesterbusinessexpo.co.uk,21/02/2025 09:00:00,23/02/2025 17:00:00
+33,Glasgow Film & Photography Festival,Glasgow,www.glasgowfilmphoto.co.uk,25/02/2025 10:00:00,02/03/2025 22:00:00
+34,Liverpool Fashion & Lifestyle Show,Liverpool,www.liverpoolfashionlifestyle.co.uk,04/03/2025 11:00:00,07/03/2025 20:00:00
+35,Birmingham Science & Innovation Fair,Birmingham,www.birminghamsciencefair.co.uk,09/03/2025 09:00:00,13/03/2025 17:00:00
+36,London Music & Culture Festival,London,www.londonmusicculturefest.co.uk,15/03/2025 12:00:00,20/03/2025 23:00:00
+37,Manchester Sports & Fitness Expo,Manchester,www.manchestersportsexpo.co.uk,22/03/2025 09:00:00,24/03/2025 17:00:00
+38,Glasgow Education Symposium,Glasgow,www.glasgoweducationsymp.co.uk,26/03/2025 09:00:00,28/03/2025 17:00:00
+39,Liverpool Health & Wellness Conference,Liverpool,www.liverpoolhealthwellness.co.uk,30/03/2025 09:00:00,01/04/2025 17:00:00
+40,Birmingham Tech Summit,Birmingham,www.birminghamtechsummit.co.uk,02/04/2025 09:00:00,04/04/2025 17:00:00
+41,London Finance & Investment Forum,London,www.londonfinanceforum.co.uk,05/01/2025 09:00:00,06/01/2025 17:00:00
+42,Manchester Environmental Summit,Manchester,www.manchesterenvsummit.co.uk,08/01/2025 09:00:00,09/01/2025 17:00:00
+43,Glasgow Culinary Arts Week,Glasgow,www.glasgowculinaryarts.co.uk,11/01/2025 10:00:00,17/01/2025 17:00:00
+44,Liverpool Automotive Show,Liverpool,www.liverpoolautoshow.co.uk,19/01/2025 10:00:00,21/01/2025 18:00:00
+45,Birmingham Architecture Expo,Birmingham,www.birminghamarchexpo.co.uk,23/01/2025 09:00:00,26/01/2025 17:00:00
+46,London Photography Exhibition,London,www.londonphotoexhibition.co.uk,28/01/2025 09:00:00,31/01/2025 17:00:00
+47,Manchester Book Fair,Manchester,www.manchesterbookfair.co.uk,02/02/2025 10:00:00,04/02/2025 17:00:00
+48,Glasgow Innovation Summit,Glasgow,www.glasgowinnovationsummit.co.uk,06/02/2025 09:00:00,08/02/2025 17:00:00
+49,Liverpool Marketing Forum,Liverpool,www.liverpoolmarketingforum.co.uk,10/02/2025 09:00:00,11/02/2025 17:00:00
+50,Birmingham Medical Symposium,Birmingham,www.birminghammedsymposium.co.uk,13/02/2025 09:00:00,14/02/2025 17:00:00
