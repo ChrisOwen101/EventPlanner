@@ -32,7 +32,7 @@ export interface SheetRow {
 export async function getEventsFromSheet(): Promise<Location[]> {
     const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
     const sheetId = "19-KrNeRa1HxWm-ePh88WiQBVFnKaWe-xzKnL9huvQXM"
-    const range = "Events!A1:G";
+    const range = "Events!A1:H";
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     const response = await fetch(url);
@@ -51,8 +51,8 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             location: row.location,
             url: row.url,
             description: row.description,
-            start: moment(row.start, "DD/MM/YYYY HH:mm:ss"),
-            end: moment(row.end, "DD/MM/YYYY HH:mm:ss"),
+            start: moment(row.start, "DD/MM/YYYY"),
+            end: moment(row.end, "DD/MM/YYYY"),
         };
     }
 
@@ -69,8 +69,6 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             start: row[6],
             end: row[7],
         }));
-
-    console.log(events)
 
     return groupByLocation(events)
 }
