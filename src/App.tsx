@@ -1,7 +1,11 @@
 import './App.css'
 import { useState, useCallback, useEffect } from 'react';
 import NavBar from './NavBar';
-import Timeline from 'react-calendar-timeline'
+import Timeline, {
+  TimelineHeaders,
+  SidebarHeader,
+  DateHeader
+} from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, } from './networks/GoogleSheets';
 
@@ -35,7 +39,18 @@ const App = () => {
       canMove: false,
       canResize: false,
       canChangeGroup: false,
-      url: event.url
+      url: event.url,
+      itemProps: {
+        style: {
+          background: '#53815c',
+          borderRadius: '4px',
+          border: '1px solid #53815c',
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          overflow: 'hidden',
+        }
+      }
     })))
   }, [events])
 
@@ -63,7 +78,17 @@ const App = () => {
                 window.open(item.url)
               }
             }}
-          />
+          >
+            <TimelineHeaders className='header'>
+              <SidebarHeader>
+                {({ getRootProps }) => {
+                  return <div {...getRootProps()} className='header'></div>
+                }}
+              </SidebarHeader>
+              <DateHeader unit="primaryHeader" className='header'></DateHeader>
+              <DateHeader className='header' />
+            </TimelineHeaders>
+          </Timeline>
         </div>
       }
 
