@@ -29,23 +29,22 @@ const App = () => {
     fetchData();
   }, [])
 
-  const getFilteredEvents = () => {
+  const getFilteredEvents = useCallback(() => {
     if (search === '') {
-      return events
+      return events;
     }
 
     const filtered = events.map((location) => {
       return {
         ...location,
         events: location.events.filter((event) => {
-          return event.name.toLowerCase().includes(search.toLowerCase())
+          return event.name.toLowerCase().includes(search.toLowerCase());
         })
-      }
-    }).filter((location) => location.events.length > 0)
+      };
+    }).filter((location) => location.events.length > 0);
 
-    return filtered
-
-  }
+    return filtered;
+  }, [events, search]);
 
   const getGroups = useCallback(() => {
     return getFilteredEvents().map((location) => ({
@@ -80,17 +79,17 @@ const App = () => {
     })))
   }, [events, search])
 
-  const getNoEventsFound = () => {
+  const getNoEventsFound = useCallback(() => {
     return <div className="alert alert-warning" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
       <h6>No events could be found for the search term "{search}"</h6>
     </div>
-  }
+  }, [search]);
 
-  const getLoading = () => {
+  const getLoading = useCallback(() => {
     return <div className="alert alert-secondary" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
       <h5>Loading...</h5>
     </div>
-  }
+  }, []);
 
   const onClick = (itemId: number) => {
     const item = getItems().find(item => item.id === itemId);
@@ -117,6 +116,9 @@ const App = () => {
   const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-1, 'month');
   const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(9, 'month');
 
+  const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90;
+  const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270;
+
   return (
     <div>
       <NavBar onSearch={(search) => {
@@ -129,8 +131,8 @@ const App = () => {
             items={getItems()}
             defaultTimeStart={startTime.valueOf()}
             defaultTimeEnd={endTime.valueOf()}
-            minZoom={1000 * 60 * 60 * 24 * 30}
-            maxZoom={1000 * 60 * 60 * 24 * 90}
+            minZoom={minZoom}
+            maxZoom={maxZoom}
             lineHeight={40}
             itemHeightRatio={0.75}
             sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
@@ -142,14 +144,24 @@ const App = () => {
               getItemProps,
             }) => {
 
-              const borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+              let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+
+              if (item.event.end.isBefore(moment())) {
+                borderColor = '2px solid #d8d8d8'
+              }
+
+              const backgroundColor = item.event.end.isBefore(moment()) ? 'rgb(189, 189, 189)' : item.itemProps.style.background
+              const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
+
 
               return (
                 <div {...getItemProps({
                   ...item.itemProps,
                   style: {
                     ...item.itemProps.style,
-                    border: borderColor
+                    border: borderColor,
+                    background: backgroundColor,
+                    color: textColor,
                   }
                 })} title={itemContext.title}>
 
