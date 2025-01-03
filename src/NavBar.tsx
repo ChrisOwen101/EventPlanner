@@ -5,16 +5,16 @@ function NavBar({ onSearch }: { onSearch: (search: string) => void }) {
         <nav className="navbar bg-primary navbar-expand-lg custom-navbar" data-bs-theme="dark">
             <div className="container-fluid">
                 <span className="navbar-brand mb-0">
-                    <b>Exhibitions</b>London
+                    <span className='poppins-bold'>Exhibitions</span>London
                 </span>
                 <div className="collapse navbar-collapse">
                     <nav>
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             {/* <li className="nav-item">
-                                <NavLink className="nav-link" to="/" end>
-                                    Home
-                                </NavLink>
-                            </li> */}
+                    <NavLink className="nav-link" to="/" end>
+                        Home
+                    </NavLink>
+                    </li> */}
                         </ul>
                     </nav>
                     <form className="d-flex ms-auto" role="search">

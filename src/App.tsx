@@ -157,7 +157,7 @@ const App = () => {
                 })} data-bs-toggle="tooltip" data-bs-placement="top" title={itemContext.title}>
 
                   <div
-                    className="rct-item-content"
+                    className="rct-item-content poppins-medium"
                     style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
                   >
                     {itemContext.title}
