@@ -1,0 +1,7 @@
+@media (min-width: 576px) {
+    .custom-navbar {
+        margin: 24px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+}

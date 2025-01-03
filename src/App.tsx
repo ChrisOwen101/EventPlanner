@@ -101,13 +101,14 @@ const App = () => {
   const items = getItems();
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
 
+  console.log(window.innerWidth)
   return (
     <div>
       <NavBar onSearch={(search) => {
         setSearch(search);
       }} />
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
-        <div style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e0e0e0' }}>
+        <div className="timeline-container">
           <Timeline
             groups={getGroups()}
             items={getItems()}
@@ -115,8 +116,9 @@ const App = () => {
             defaultTimeEnd={moment().add(3, 'month').valueOf()}
             lineHeight={40}
             itemHeightRatio={0.75}
+            sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
             groupRenderer={({ group }) => {
-              return <div style={{ paddingLeft: '16px' }}>{group.title}</div>
+              return <div className='group'><p>{group.title}</p></div>
             }}
             itemRenderer={({ item,
               itemContext,
