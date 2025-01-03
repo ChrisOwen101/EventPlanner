@@ -9,6 +9,7 @@ import Timeline, {
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
 import { Offcanvas, Tooltip } from 'bootstrap';
+import { on } from 'events';
 
 const App = () => {
 
@@ -16,13 +17,11 @@ const App = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [search, setSearch] = useState<string>('');
 
-  console.log()
 
   useEffect(() => {
     const fetchData = async () => {
       const events = await getEventsFromSheet()
       setEvents(events)
-      console.log(events)
     };
     fetchData();
   }, [])
@@ -97,11 +96,22 @@ const App = () => {
     </div>
   }
 
+  const onClick = (itemId: number) => {
+    const item = getItems().find(item => item.id === itemId);
+    if (item) {
+      setSelectedEvent(item.event);
+      const offcanvasElement = document.getElementById('offcanvasExample');
+      if (offcanvasElement) {
+        const offcanvas = new Offcanvas(offcanvasElement);
+        offcanvas.show();
+      }
+    }
+  }
+
   const groups = getGroups();
   const items = getItems();
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
 
-  console.log(window.innerWidth)
   return (
     <div>
       <NavBar onSearch={(search) => {
@@ -125,8 +135,16 @@ const App = () => {
               getItemProps,
             }) => {
 
+              const borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+
               return (
-                <div {...getItemProps(item.itemProps)} data-bs-toggle="tooltip" data-bs-placement="top" title={itemContext.title}>
+                <div {...getItemProps({
+                  ...item.itemProps,
+                  style: {
+                    ...item.itemProps.style,
+                    border: borderColor
+                  }
+                })} data-bs-toggle="tooltip" data-bs-placement="top" title={itemContext.title}>
 
                   <div
                     className="rct-item-content"
@@ -141,14 +159,13 @@ const App = () => {
             minZoom={1000 * 60 * 60 * 24 * 6}
             maxZoom={1000 * 60 * 60 * 24 * 21}
             onItemSelect={(itemId: number) => {
-              const item = getItems().find(item => item.id === itemId);
-              if (item) {
-                setSelectedEvent(item.event);
-                const offcanvasElement = document.getElementById('offcanvasExample');
-                if (offcanvasElement) {
-                  const offcanvas = new Offcanvas(offcanvasElement);
-                  offcanvas.show();
-                }
+              if (window.innerWidth >= 576) {
+                onClick(itemId)
+              }
+            }}
+            onItemClick={(itemId: number) => {
+              if (window.innerWidth < 576) {
+                onClick(itemId)
               }
             }}
           >
