@@ -37,3 +37,14 @@
     white-space: normal;
     line-height: 1.5;
 }
+
+.item-dates {
+    color: rgb(204, 204, 204);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Fade in on item hover */
+.rct-item:hover .item-dates {
+    opacity: 1;
+}

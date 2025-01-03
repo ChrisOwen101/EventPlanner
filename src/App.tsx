@@ -9,13 +9,16 @@ import Timeline, {
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
-import { Offcanvas, Tooltip } from 'bootstrap';
+import { Offcanvas } from 'bootstrap';
+import fetchMeta from 'fetch-meta-tags'
+
 
 const App = () => {
 
   const [events, setEvents] = useState<Location[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [search, setSearch] = useState<string>('');
+
 
 
   useEffect(() => {
@@ -43,13 +46,6 @@ const App = () => {
     return filtered
 
   }
-
-  useEffect(() => {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl)
-    })
-  }, [events, search])
 
   const getGroups = useCallback(() => {
     return getFilteredEvents().map((location) => ({
@@ -155,13 +151,15 @@ const App = () => {
                     ...item.itemProps.style,
                     border: borderColor
                   }
-                })} data-bs-toggle="tooltip" data-bs-placement="top" title={itemContext.title}>
+                })} title={itemContext.title}>
 
                   <div
                     className="rct-item-content poppins-medium"
                     style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
                   >
-                    {itemContext.title}
+                    {itemContext.title}  <span className="item-dates">
+                      ({renderStartEndTime(item.event.start, item.event.end)})
+                    </span>
                   </div>
 
                 </div>
@@ -190,6 +188,7 @@ const App = () => {
             </TimelineHeaders>
           </Timeline>
           <div className="offcanvas offcanvas-start" tabIndex={-1} id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            {selectedEvent?.image ? <img src={selectedEvent?.image} alt="" className="offcanvas-image" /> : <></>}
             <div className="offcanvas-header">
               <h5 className="offcanvas-title" id="offcanvasExampleLabel">{selectedEvent?.name}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
