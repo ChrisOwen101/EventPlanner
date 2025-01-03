@@ -4,7 +4,8 @@ import NavBar from './NavBar';
 import Timeline, {
   TimelineHeaders,
   SidebarHeader,
-  DateHeader
+  DateHeader,
+  TodayMarker
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
@@ -178,6 +179,7 @@ const App = () => {
             }}
           >
             <TimelineHeaders className='header'>
+              <TodayMarker />
               <SidebarHeader>
                 {({ getRootProps }) => {
                   return <div {...getRootProps()} className='header'></div>
