@@ -43,6 +43,15 @@ export async function getEventsFromSheet(): Promise<Location[]> {
         return [];
     }
 
+    const convertToTitleCase = (str: string) => {
+        return str.replace(
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
     function parseRow(row: SheetRow): Event {
         return {
             id: parseInt(row.id),
@@ -61,7 +70,7 @@ export async function getEventsFromSheet(): Promise<Location[]> {
         .filter((row: string[]) => row.length > 1)
         .map((row: string[]): Event => parseRow({
             id: row[0],
-            name: row[1],
+            name: convertToTitleCase(row[1]),
             cost: row[2],
             location: row[3],
             url: row[4],

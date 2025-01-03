@@ -5,7 +5,7 @@ function NavBar({ onSearch }: { onSearch: (search: string) => void }) {
         <nav className="navbar bg-primary navbar-expand-lg custom-navbar" data-bs-theme="dark">
             <div className="container-fluid">
                 <span className="navbar-brand mb-0">
-                    London Event Planner
+                    <b>Exhibitions</b>London
                 </span>
                 <div className="collapse navbar-collapse">
                     <nav>

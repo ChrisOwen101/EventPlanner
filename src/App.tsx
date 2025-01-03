@@ -107,6 +107,12 @@ const App = () => {
     }
   }
 
+  const renderStartEndTime = (start: moment.Moment, end: moment.Moment) => {
+    const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY';
+    const endFormat = 'Do MMM YYYY';
+    return `${start.format(startFormat)} - ${end.format(endFormat)}`;
+  };
+
   const groups = getGroups();
   const items = getItems();
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
@@ -152,7 +158,7 @@ const App = () => {
 
                   <div
                     className="rct-item-content"
-                    style={{ maxHeight: `${itemContext.dimensions.height}` }}
+                    style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
                   >
                     {itemContext.title}
                   </div>
@@ -189,12 +195,11 @@ const App = () => {
             <div className="offcanvas-body">
               {selectedEvent && (
                 <div>
-                  <p><strong>Location:</strong> {selectedEvent.location}</p>
-                  <p><strong>Cost:</strong> {selectedEvent.cost}</p>
-                  <p><strong>Description:</strong> {selectedEvent.description}</p>
-                  <p><strong>Start:</strong> {selectedEvent.start.format('MMMM Do YYYY')}</p>
-                  <p><strong>End:</strong> {selectedEvent.end.format('MMMM Do YYYY')}</p>
-                  <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>Go to Event</button>
+                  <p><strong>Running:</strong> {renderStartEndTime(selectedEvent.start, selectedEvent.end)}</p>
+                  <p><strong>Venue:</strong> {selectedEvent.location}</p>
+                  <p><strong>Entry:</strong> {selectedEvent.cost}</p>
+                  <p>{selectedEvent.description}</p>
+                  <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>View Event</button>
                 </div>
               )}
             </div>
