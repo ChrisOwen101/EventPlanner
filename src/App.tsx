@@ -111,6 +111,9 @@ const App = () => {
   const items = getItems();
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
 
+  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-1, 'month');
+  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(9, 'month');
+
   return (
     <div>
       <NavBar onSearch={(search) => {
@@ -121,8 +124,10 @@ const App = () => {
           <Timeline
             groups={getGroups()}
             items={getItems()}
-            defaultTimeStart={moment().add(-1, 'day').valueOf()}
-            defaultTimeEnd={moment().add(3, 'month').valueOf()}
+            defaultTimeStart={startTime.valueOf()}
+            defaultTimeEnd={endTime.valueOf()}
+            minZoom={1000 * 60 * 60 * 24 * 30}
+            maxZoom={1000 * 60 * 60 * 24 * 90}
             lineHeight={40}
             itemHeightRatio={0.75}
             sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
@@ -155,8 +160,6 @@ const App = () => {
                 </div>
               )
             }}
-            minZoom={1000 * 60 * 60 * 24 * 6}
-            maxZoom={1000 * 60 * 60 * 24 * 21}
             onItemSelect={(itemId: number) => {
               if (window.innerWidth >= 576) {
                 onClick(itemId)
