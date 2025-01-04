@@ -27,7 +27,7 @@ export const getUser = () => {
     return getValue("userLocal", undefined)
 }
 
-export const toggleFavourite = (id: number) => {
+export const toggleFavourite = (id: string) => {
     const list = getValue("favourites", [])
 
     if (list.includes(id)) {

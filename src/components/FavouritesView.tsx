@@ -22,7 +22,7 @@ const FavouritesView: React.FC<FavouritesViewProps> = ({ allEvents }) => {
                 {favourites.length === 0 && (
                     <p>You have no favourites</p>
                 )}
-                {favourites.map((id: number) => {
+                {favourites.map((id: string) => {
                     const event = allEvents.flatMap((location) => location.events).find((event) => event.id === id)
 
                     if (!event) return null
