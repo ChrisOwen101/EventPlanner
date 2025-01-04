@@ -143,8 +143,8 @@ const App = () => {
   const items = getItems();
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
 
-  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-1, 'month');
-  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(9, 'month');
+  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-2.5, 'month');
+  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(8, 'month');
 
   const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90;
   const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270;
