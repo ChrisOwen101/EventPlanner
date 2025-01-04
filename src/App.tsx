@@ -143,7 +143,7 @@ const App = () => {
             defaultTimeEnd={endTime.valueOf()}
             minZoom={minZoom}
             maxZoom={maxZoom}
-            lineHeight={60}
+            lineHeight={54}
             itemHeightRatio={0.75}
             sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
             groupRenderer={({ group }) => {
@@ -198,14 +198,14 @@ const App = () => {
               }
             }}
           >
-            <TimelineHeaders className='header'>
+            <TimelineHeaders className='header sticky'>
               <TodayMarker />
               <SidebarHeader>
                 {({ getRootProps }) => {
                   return <div {...getRootProps()} className='header'></div>
                 }}
               </SidebarHeader>
-              <DateHeader unit="primaryHeader" className='header'></DateHeader>
+              <DateHeader unit="primaryHeader" className='header' ></DateHeader>
               <DateHeader className='header' />
             </TimelineHeaders>
           </Timeline>

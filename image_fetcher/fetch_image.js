@@ -2,21 +2,22 @@ import fs from 'fs/promises';
 import axios from 'axios';
 
 async function main() {
-    const fileContent = await fs.readFile('./example.txt', 'utf-8');
+    const fileContent = await fs.readFile('./urls.txt', 'utf-8');
     const urls = fileContent.split('\n').map(u => u.trim()).filter(Boolean);
+    const results = [];
 
     for (const url of urls) {
         try {
             const { data } = await axios.get(url);
-            console.log(data)
-            const ogMatch = data.match(/<meta\s+(?:property="og:image"\s+content|name="twitter:image"\s+content)="([^"]+)"/i);
-            console.log(ogMatch)
-            console.log(`${url},${ogMatch ? ogMatch[1] : 'No image found'}`);
-        } catch (e) {
-            // console.log(e.message);
-            // console.log(`${url},Error fetching`);
+            const regex = /<meta\s+(?:property="og:image"\s+content|name="twitter:image"\s+content|itemprop="image"\s+content)="([^"]+)"/i;
+            const ogMatch = data.match(regex);
+            results.push(ogMatch ? ogMatch[1] : 'No image found');
+        } catch {
+            results.push('Error fetching');
         }
     }
+
+    await fs.writeFile('./output.txt', results.join('\n'));
 }
 
 main().catch(() => console.error('Failed to fetch images'));

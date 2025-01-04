@@ -2,6 +2,11 @@
     background: #324d37;
 }
 
+.sticky {
+    position: sticky;
+    top: 0;
+}
+
 @media (min-width: 576px) {
     .timeline-container {
         margin-left: 24px;
