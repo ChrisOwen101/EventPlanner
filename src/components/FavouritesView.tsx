@@ -28,6 +28,7 @@ const FavouritesView: React.FC<FavouritesViewProps> = ({ allEvents }) => {
                     if (!event) return null
 
                     return <div key={event.id} className="favourite-item">
+                        <p><i>{event.location}</i></p>
                         <h5>{event.name}</h5>
                         <p>{renderStartEndTime(event.start, event.end)}</p>
                         <button type="button" className="btn btn-primary" onClick={() => window.open(event.url, '_blank')}>View Event</button>

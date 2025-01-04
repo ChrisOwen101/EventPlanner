@@ -1,0 +1,31 @@
+.cost-fieldset {
+    border: 1px solid #000;
+    border-radius: 6px;
+    position: relative;
+    padding: 25px 20px 20px 20px;
+}
+
+.cost-fieldset p {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    background-color: #fff;
+    margin: 0;
+    padding: 2px 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 100;
+}
+
+.card.card-body {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-check {
+    margin-bottom: 10px;
+}

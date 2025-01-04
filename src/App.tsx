@@ -9,9 +9,12 @@ import Timeline, {
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
-import { Offcanvas } from 'bootstrap'
+import { Offcanvas, Collapse } from 'bootstrap'
 import ItemView from './components/ItemView'
 import FavouritesView from './components/FavouritesView'
+import FilterView from './components/FilterView'
+import { getFavourites } from './tools/LocalStorage'
+import { renderStartEndTime } from './tools/TimeRenderer'
 
 
 const App = () => {
@@ -19,6 +22,23 @@ const App = () => {
   const [events, setEvents] = useState<Location[]>([])
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [search, setSearch] = useState<string>('')
+  const [filterSettings, setFilterSettings] = useState({ showPaid: true, showFree: true })
+
+  const [favourites, setFavourites] = useState<number[]>(getFavourites())
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      // When local storage changes, update the favourites list
+      setFavourites(getFavourites())
+    }
+
+
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,31 +49,60 @@ const App = () => {
   }, [])
 
   const getFilteredEvents = useCallback(() => {
-    if (search === '') {
-      return events
-    }
+    const filtered = events
+      .map((location) => {
+        return {
+          ...location,
+          events: location.events.filter((event) => {
+            return event.name.toLowerCase().includes(search.toLowerCase())
+          })
+        }
+      })
+      .map((location) => {
+        return {
+          ...location,
+          events: location.events.filter((event) => {
+            if (event.cost === 'Free' && filterSettings.showFree) {
+              return true
+            }
 
-    const filtered = events.map((location) => {
-      return {
-        ...location,
-        events: location.events.filter((event) => {
-          return event.name.toLowerCase().includes(search.toLowerCase())
-        })
-      }
-    }).filter((location) => location.events.length > 0)
+            if (event.cost === 'Paid' && filterSettings.showPaid) {
+              return true
+            }
+
+            return false
+          })
+        }
+      })
+      .filter((location) => location.events.length > 0)
 
     return filtered
-  }, [events, search])
+
+  }, [events, search, filterSettings])
 
   const getGroups = useCallback(() => {
-    return getFilteredEvents().map((location) => ({
-      id: location.id,
-      title: location.name,
-      stackItems: true
-    }))
-  }, [events, search])
+    const filteredEvents = getFilteredEvents()
+
+    const groups = filteredEvents.map((location) => {
+      const averageImportance = location.events.reduce((sum, event) => {
+        return sum + event.importance
+      }, 0) / location.events.length
+
+
+      return {
+        id: location.id,
+        title: location.name,
+        stackItems: true,
+        averageImportance
+      }
+    })
+
+    return groups.sort((a, b) => a.averageImportance - b.averageImportance)
+  }, [events, search, filterSettings])
 
   const getItems = useCallback(() => {
+    console.log(getFilteredEvents())
+
     return getFilteredEvents().flatMap((location) => location.events.map((event) => ({
       id: event.id,
       group: location.id,
@@ -76,13 +125,13 @@ const App = () => {
         }
       }
     })))
-  }, [events, search])
+  }, [events, search, filterSettings])
 
   const getNoEventsFound = useCallback(() => {
     return <div className="alert alert-warning" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
       <h6>No events could be found for the search term "{search}"</h6>
     </div>
-  }, [search])
+  }, [search, filterSettings])
 
   const getLoading = useCallback(() => {
     return <div className="alert alert-secondary" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
@@ -110,18 +159,40 @@ const App = () => {
     }
   }
 
-  const renderStartEndTime = (start: moment.Moment, end: moment.Moment) => {
-    const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY'
-    const endFormat = 'Do MMM YYYY'
-    return `${start.format(startFormat)} - ${end.format(endFormat)}`
+  const handleFilterClick = () => {
+    const collapseExample = document.getElementById('collapseExample')
+    if (collapseExample) {
+      new Collapse(collapseExample).toggle()
+    }
+  }
+
+  const calculateBackgroundColor = (end: moment.Moment) => {
+    if (end.isBefore(moment())) {
+      return '#bdbdbd'
+    }
+
+    const now = moment()
+    const duration = moment.duration(end.diff(now))
+    const daysRemaining = duration.asDays()
+    const maxDays = 30 // Maximum days to consider for darkest color
+    const percentage = Math.max(0, Math.min(1, daysRemaining / maxDays))
+
+    const startColor = { r: 189, g: 189, b: 189 } // #bdbdbd
+    const endColor = { r: 83, g: 129, b: 92 } // #53815c
+
+    let r = Math.round(startColor.r + percentage * (endColor.r - startColor.r))
+    let g = Math.round(startColor.g + percentage * (endColor.g - startColor.g))
+    let b = Math.round(startColor.b + percentage * (endColor.b - startColor.b))
+
+    return `rgb(${r}, ${g}, ${b})`
   }
 
   const groups = getGroups()
   const items = getItems()
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
 
-  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-1, 'month')
-  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(9, 'month')
+  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-2.5, 'month')
+  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(8, 'month')
 
   const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
   const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
@@ -133,9 +204,22 @@ const App = () => {
           setSearch(search)
         }}
         onFilter={() => {
-
+          handleFilterClick()
         }}
         onFavourite={onFavouriteClicked} />
+
+      <div className="collapse" id="collapseExample" style={{
+        paddingLeft: '24px',
+        paddingRight: '24px',
+        paddingBottom: '24px',
+      }}>
+        <FilterView
+          onFilterChange={(filterSettings) => {
+            setFilterSettings(filterSettings)
+          }}
+        />
+      </div>
+
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
         <div className="timeline-container">
           <Timeline
@@ -145,7 +229,7 @@ const App = () => {
             defaultTimeEnd={endTime.valueOf()}
             minZoom={minZoom}
             maxZoom={maxZoom}
-            lineHeight={40}
+            lineHeight={54}
             itemHeightRatio={0.75}
             sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
             groupRenderer={({ group }) => {
@@ -160,9 +244,15 @@ const App = () => {
 
               if (item.event.end.isBefore(moment())) {
                 borderColor = '2px solid #d8d8d8'
+              } else if (favourites.includes(item.event.id)) {
+                borderColor = '2px solid gold'
               }
 
-              const backgroundColor = item.event.end.isBefore(moment()) ? 'rgb(189, 189, 189)' : item.itemProps.style.background
+              if (item.event.end.isBefore(moment())) {
+                borderColor = '2px solid #d8d8d8'
+              }
+
+              const backgroundColor = calculateBackgroundColor(item.event.end)
               const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
 
               return (
@@ -212,12 +302,8 @@ const App = () => {
           </Timeline>
           {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
             setSelectedEvent(null)
-          }
-          } />}
-          <FavouritesView allEvents={events} />
-        </div>
-      }
-
+          }} />}
+          <FavouritesView allEvents={events} /> </div>}
     </div >
   )
 }
