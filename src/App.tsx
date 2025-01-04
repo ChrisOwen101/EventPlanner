@@ -9,31 +9,16 @@ import Timeline, {
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
-import ItemView from './components/ItemView'
 import { Offcanvas } from 'bootstrap'
-import { renderStartEndTime } from './tools/TimeRenderer'
-import { getFavourites } from './tools/LocalStorage'
+import ItemView from './components/ItemView'
+import FavouritesView from './components/FavouritesView'
+
 
 const App = () => {
 
   const [events, setEvents] = useState<Location[]>([])
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [search, setSearch] = useState<string>('')
-  const [favourites, setFavourites] = useState<number[]>(getFavourites())
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      // When local storage changes, update the favourites list
-      setFavourites(getFavourites())
-    }
-
-
-    window.addEventListener('storage', handleStorageChange)
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-    }
-  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,23 +46,11 @@ const App = () => {
   }, [events, search])
 
   const getGroups = useCallback(() => {
-    const filteredEvents = getFilteredEvents()
-
-    const groups = filteredEvents.map((location) => {
-      const averageImportance = location.events.reduce((sum, event) => {
-        return sum + event.importance
-      }, 0) / location.events.length
-
-
-      return {
-        id: location.id,
-        title: location.name,
-        stackItems: true,
-        averageImportance
-      }
-    })
-
-    return groups.sort((a, b) => a.averageImportance - b.averageImportance)
+    return getFilteredEvents().map((location) => ({
+      id: location.id,
+      title: location.name,
+      stackItems: true
+    }))
   }, [events, search])
 
   const getItems = useCallback(() => {
@@ -93,6 +66,7 @@ const App = () => {
       event: event,
       itemProps: {
         style: {
+          background: '#53815c',
           borderRadius: '4px',
           border: '1px solid #53815c',
           color: 'white',
@@ -128,42 +102,40 @@ const App = () => {
     }
   }
 
-  const calculateBackgroundColor = (end: moment.Moment) => {
-    if (end.isBefore(moment())) {
-      return '#bdbdbd'
+  const onFavouriteClicked = () => {
+    const offcanvasElement = document.getElementById('offCanvasFavourites')
+    if (offcanvasElement) {
+      const offcanvas = new Offcanvas(offcanvasElement)
+      offcanvas.show()
     }
+  }
 
-    const now = moment()
-    const duration = moment.duration(end.diff(now))
-    const daysRemaining = duration.asDays()
-    const maxDays = 30 // Maximum days to consider for darkest color
-    const percentage = Math.max(0, Math.min(1, daysRemaining / maxDays))
-
-    const startColor = { r: 189, g: 189, b: 189 } // #bdbdbd
-    const endColor = { r: 83, g: 129, b: 92 } // #53815c
-
-    let r = Math.round(startColor.r + percentage * (endColor.r - startColor.r))
-    let g = Math.round(startColor.g + percentage * (endColor.g - startColor.g))
-    let b = Math.round(startColor.b + percentage * (endColor.b - startColor.b))
-
-    return `rgb(${r}, ${g}, ${b})`
+  const renderStartEndTime = (start: moment.Moment, end: moment.Moment) => {
+    const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY'
+    const endFormat = 'Do MMM YYYY'
+    return `${start.format(startFormat)} - ${end.format(endFormat)}`
   }
 
   const groups = getGroups()
   const items = getItems()
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
 
-  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-2.5, 'month')
-  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(8, 'month')
+  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-1, 'month')
+  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(9, 'month')
 
   const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
   const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
 
   return (
     <div>
-      <NavBar onSearch={(search) => {
-        setSearch(search)
-      }} />
+      <NavBar
+        onSearch={(search) => {
+          setSearch(search)
+        }}
+        onFilter={() => {
+
+        }}
+        onFavourite={onFavouriteClicked} />
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
         <div className="timeline-container">
           <Timeline
@@ -173,7 +145,7 @@ const App = () => {
             defaultTimeEnd={endTime.valueOf()}
             minZoom={minZoom}
             maxZoom={maxZoom}
-            lineHeight={54}
+            lineHeight={40}
             itemHeightRatio={0.75}
             sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
             groupRenderer={({ group }) => {
@@ -188,15 +160,9 @@ const App = () => {
 
               if (item.event.end.isBefore(moment())) {
                 borderColor = '2px solid #d8d8d8'
-              } else if (favourites.includes(item.event.id)) {
-                borderColor = '2px solid gold'
               }
 
-              if (item.event.end.isBefore(moment())) {
-                borderColor = '2px solid #d8d8d8'
-              }
-
-              const backgroundColor = calculateBackgroundColor(item.event.end)
+              const backgroundColor = item.event.end.isBefore(moment()) ? 'rgb(189, 189, 189)' : item.itemProps.style.background
               const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
 
               return (
@@ -233,18 +199,22 @@ const App = () => {
               }
             }}
           >
-            <TimelineHeaders className='header sticky'>
+            <TimelineHeaders className='header'>
               <TodayMarker />
               <SidebarHeader>
                 {({ getRootProps }) => {
                   return <div {...getRootProps()} className='header'></div>
                 }}
               </SidebarHeader>
-              <DateHeader unit="primaryHeader" className='header' ></DateHeader>
+              <DateHeader unit="primaryHeader" className='header'></DateHeader>
               <DateHeader className='header' />
             </TimelineHeaders>
           </Timeline>
-          <ItemView selectedEvent={selectedEvent} onClose={() => setSelectedEvent(null)} />
+          {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
+            setSelectedEvent(null)
+          }
+          } />}
+          <FavouritesView allEvents={events} />
         </div>
       }
 
