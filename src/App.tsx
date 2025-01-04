@@ -130,7 +130,7 @@ const App = () => {
             defaultTimeEnd={endTime.valueOf()}
             minZoom={minZoom}
             maxZoom={maxZoom}
-            lineHeight={40}
+            lineHeight={60}
             itemHeightRatio={0.75}
             sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
             groupRenderer={({ group }) => {
