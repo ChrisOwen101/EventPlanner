@@ -1,4 +1,5 @@
 import moment from "moment";
+import { parse } from "path";
 
 export interface Event {
     id: number;
@@ -10,6 +11,7 @@ export interface Event {
     start: moment.Moment;
     end: moment.Moment;
     image?: string;
+    importance: number;
 }
 
 export interface Location {
@@ -28,13 +30,14 @@ export interface SheetRow {
     start: string;
     end: string;
     image: string;
+    importance: string;
 }
 
 
 export async function getEventsFromSheet(): Promise<Location[]> {
     const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
     const sheetId = "19-KrNeRa1HxWm-ePh88WiQBVFnKaWe-xzKnL9huvQXM"
-    const range = "Events!A1:I";
+    const range = "Events!A1:J";
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     const response = await fetch(url);
@@ -64,7 +67,8 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             description: row.description,
             start: moment(row.start, "DD/MM/YYYY"),
             end: moment(row.end, "DD/MM/YYYY"),
-            image: row.image
+            image: row.image,
+            importance: parseInt(row.importance)
         };
     }
 
@@ -80,7 +84,8 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             description: row[5],
             start: row[6],
             end: row[7],
-            image: row[8]
+            image: row[8],
+            importance: row[9]
         }));
 
     return groupByLocation(events)

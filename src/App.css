@@ -36,6 +36,12 @@
     }
 }
 
+.offcanvas-image {
+    max-height: 40%;
+    max-width: 100%;
+    object-fit: cover;
+}
+
 .group p {
     word-break: break-normal;
     white-space: normal;

@@ -44,12 +44,25 @@ const App = () => {
   }, [events, search]);
 
   const getGroups = useCallback(() => {
-    return getFilteredEvents().map((location) => ({
-      id: location.id,
-      title: location.name,
-      stackItems: true
-    }))
-  }, [events, search])
+    const filteredEvents = getFilteredEvents();
+
+    const groups = filteredEvents.map((location) => {
+      const averageImportance = location.events.reduce((sum, event) => {
+        console.log
+        return sum + event.importance
+      }, 0) / location.events.length;
+
+
+      return {
+        id: location.id,
+        title: location.name,
+        stackItems: true,
+        averageImportance
+      };
+    });
+
+    return groups.sort((a, b) => a.averageImportance - b.averageImportance);
+  }, [events, search]);
 
   const getItems = useCallback(() => {
     return getFilteredEvents().flatMap((location) => location.events.map((event) => ({
