@@ -3,6 +3,7 @@ import { Event } from '../networks/GoogleSheets'
 import { FaHeart } from 'react-icons/fa'
 import { renderStartEndTime } from '../tools/TimeRenderer'
 import { getFavourites, toggleFavourite } from '../tools/LocalStorage'
+import CalendarButtons from './CalendarButtons'
 
 interface ItemViewProps {
     selectedEvent: Event | null
@@ -27,6 +28,8 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
         }
     }
 
+    if (!selectedEvent) return null
+
     return (
         <div className="offcanvas offcanvas-start" tabIndex={-1} id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             {selectedEvent?.image ? <img src={selectedEvent?.image} alt="" className="offcanvas-image" /> : <></>}
@@ -42,7 +45,16 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
                         <p><strong>Venue:</strong> {selectedEvent.location}</p>
                         <p><strong>Entry:</strong> {selectedEvent.cost}</p>
                         <p>{selectedEvent.description}</p>
-                        <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>View Event</button>
+                        <div>
+                            <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>View Event</button>
+                            <CalendarButtons
+                                title={selectedEvent.name}
+                                description={selectedEvent.description || ''}
+                                location={selectedEvent.location}
+                                start={selectedEvent.start}
+                                end={selectedEvent.end}
+                            />
+                        </div>
                     </div>
                 )}
             </div>

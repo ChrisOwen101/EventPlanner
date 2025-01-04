@@ -2,11 +2,6 @@
     background: #324d37;
 }
 
-.sticky {
-    position: sticky;
-    top: 0;
-}
-
 @media (min-width: 576px) {
     .timeline-container {
         margin-left: 24px;
@@ -17,8 +12,7 @@
     }
 
     .group {
-        font-size: 15px;
-        margin-top: 8px;
+        padding-left: 12px;
         display: flex;
         align-items: center;
         height: 100%;
@@ -31,20 +25,11 @@
     }
 
     .group {
-        font-size: 13px;
-        margin-top: 8px;
-        margin-right: 2px;
         width: 100px;
         display: flex;
         align-items: center;
         height: 100%;
     }
-}
-
-.offcanvas-image {
-    max-height: 40%;
-    max-width: 100%;
-    object-fit: cover;
 }
 
 .group p {
@@ -54,7 +39,7 @@
 }
 
 .item-dates {
-    color: rgb(198, 198, 198);
+    color: rgb(204, 204, 204);
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
@@ -62,4 +47,15 @@
 /* Fade in on item hover */
 .rct-item:hover .item-dates {
     opacity: 1;
+}
+
+.calendar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.calendar-buttons .btn {
+    width: 100%;
 }
