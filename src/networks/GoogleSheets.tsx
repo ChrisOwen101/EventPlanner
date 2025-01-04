@@ -77,10 +77,10 @@ export async function getEventsFromSheet(): Promise<Location[]> {
         .filter((row: string[]) => row.length > 1)
         .map((row: string[]): Event => parseRow({
             id: row[0],
-            name: convertToTitleCase(row[1]),
-            cost: row[2],
-            location: row[3],
-            url: row[4],
+            url: row[1],
+            location: row[2],
+            name: convertToTitleCase(row[3]),
+            cost: row[4],
             description: row[5],
             start: row[6],
             end: row[7],
