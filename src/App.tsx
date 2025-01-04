@@ -9,14 +9,31 @@ import Timeline, {
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
+import ItemView from './components/ItemView'
 import { Offcanvas } from 'bootstrap'
-
+import { renderStartEndTime } from './tools/TimeRenderer'
+import { getFavourites } from './tools/LocalStorage'
 
 const App = () => {
 
   const [events, setEvents] = useState<Location[]>([])
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [search, setSearch] = useState<string>('')
+  const [favourites, setFavourites] = useState<number[]>(getFavourites())
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      // When local storage changes, update the favourites list
+      setFavourites(getFavourites())
+    }
+
+
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +65,6 @@ const App = () => {
 
     const groups = filteredEvents.map((location) => {
       const averageImportance = location.events.reduce((sum, event) => {
-        console.log
         return sum + event.importance
       }, 0) / location.events.length
 
@@ -112,12 +128,6 @@ const App = () => {
     }
   }
 
-  const renderStartEndTime = (start: moment.Moment, end: moment.Moment) => {
-    const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY'
-    const endFormat = 'Do MMM YYYY'
-    return `${start.format(startFormat)} - ${end.format(endFormat)}`
-  }
-
   const calculateBackgroundColor = (end: moment.Moment) => {
     if (end.isBefore(moment())) {
       return '#bdbdbd'
@@ -132,9 +142,9 @@ const App = () => {
     const startColor = { r: 189, g: 189, b: 189 } // #bdbdbd
     const endColor = { r: 83, g: 129, b: 92 } // #53815c
 
-    const r = Math.round(startColor.r + percentage * (endColor.r - startColor.r))
-    const g = Math.round(startColor.g + percentage * (endColor.g - startColor.g))
-    const b = Math.round(startColor.b + percentage * (endColor.b - startColor.b))
+    let r = Math.round(startColor.r + percentage * (endColor.r - startColor.r))
+    let g = Math.round(startColor.g + percentage * (endColor.g - startColor.g))
+    let b = Math.round(startColor.b + percentage * (endColor.b - startColor.b))
 
     return `rgb(${r}, ${g}, ${b})`
   }
@@ -175,6 +185,12 @@ const App = () => {
             }) => {
 
               let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+
+              if (item.event.end.isBefore(moment())) {
+                borderColor = '2px solid #d8d8d8'
+              } else if (favourites.includes(item.event.id)) {
+                borderColor = '2px solid gold'
+              }
 
               if (item.event.end.isBefore(moment())) {
                 borderColor = '2px solid #d8d8d8'
@@ -228,24 +244,7 @@ const App = () => {
               <DateHeader className='header' />
             </TimelineHeaders>
           </Timeline>
-          <div className="offcanvas offcanvas-start" tabIndex={-1} id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-            {selectedEvent?.image ? <img src={selectedEvent?.image} alt="" className="offcanvas-image" /> : <></>}
-            <div className="offcanvas-header">
-              <h5 className="offcanvas-title" id="offcanvasExampleLabel">{selectedEvent?.name}</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div className="offcanvas-body">
-              {selectedEvent && (
-                <div>
-                  <p><strong>Running:</strong> {renderStartEndTime(selectedEvent.start, selectedEvent.end)}</p>
-                  <p><strong>Venue:</strong> {selectedEvent.location}</p>
-                  <p><strong>Entry:</strong> {selectedEvent.cost}</p>
-                  <p>{selectedEvent.description}</p>
-                  <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>View Event</button>
-                </div>
-              )}
-            </div>
-          </div>
+          <ItemView selectedEvent={selectedEvent} onClose={() => setSelectedEvent(null)} />
         </div>
       }
 
