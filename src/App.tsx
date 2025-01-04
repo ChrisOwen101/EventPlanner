@@ -10,7 +10,6 @@ import Timeline, {
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
 import { Offcanvas } from 'bootstrap';
-import fetchMeta from 'fetch-meta-tags'
 
 
 const App = () => {
@@ -18,8 +17,6 @@ const App = () => {
   const [events, setEvents] = useState<Location[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [search, setSearch] = useState<string>('');
-
-
 
   useEffect(() => {
     const fetchData = async () => {
