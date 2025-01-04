@@ -1,5 +1,4 @@
 import moment from "moment";
-import { parse } from "path";
 
 export interface Event {
     id: number;
