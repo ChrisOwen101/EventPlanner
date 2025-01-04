@@ -77,7 +77,6 @@ const App = () => {
       event: event,
       itemProps: {
         style: {
-          background: '#53815c',
           borderRadius: '4px',
           border: '1px solid #53815c',
           color: 'white',
@@ -117,6 +116,27 @@ const App = () => {
     const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY';
     const endFormat = 'Do MMM YYYY';
     return `${start.format(startFormat)} - ${end.format(endFormat)}`;
+  };
+
+  const calculateBackgroundColor = (end: moment.Moment) => {
+    if (end.isBefore(moment())) {
+      return '#bdbdbd';
+    }
+
+    const now = moment();
+    const duration = moment.duration(end.diff(now));
+    const daysRemaining = duration.asDays();
+    const maxDays = 30; // Maximum days to consider for darkest color
+    const percentage = Math.max(0, Math.min(1, daysRemaining / maxDays));
+
+    const startColor = { r: 189, g: 189, b: 189 }; // #bdbdbd
+    const endColor = { r: 83, g: 129, b: 92 }; // #53815c
+
+    const r = Math.round(startColor.r + percentage * (endColor.r - startColor.r));
+    const g = Math.round(startColor.g + percentage * (endColor.g - startColor.g));
+    const b = Math.round(startColor.b + percentage * (endColor.b - startColor.b));
+
+    return `rgb(${r}, ${g}, ${b})`;
   };
 
   const groups = getGroups();
@@ -160,9 +180,8 @@ const App = () => {
                 borderColor = '2px solid #d8d8d8'
               }
 
-              const backgroundColor = item.event.end.isBefore(moment()) ? 'rgb(189, 189, 189)' : item.itemProps.style.background
+              const backgroundColor = calculateBackgroundColor(item.event.end);
               const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
-
 
               return (
                 <div {...getItemProps({
