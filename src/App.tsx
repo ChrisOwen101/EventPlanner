@@ -24,7 +24,7 @@ const App = () => {
   const [search, setSearch] = useState<string>('')
   const [filterSettings, setFilterSettings] = useState({ showPaid: true, showFree: true })
 
-  const [favourites, setFavourites] = useState<number[]>(getFavourites())
+  const [favourites, setFavourites] = useState<string[]>(getFavourites())
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -139,7 +139,7 @@ const App = () => {
     </div>
   }, [])
 
-  const onClick = (itemId: number) => {
+  const onClick = (itemId: string) => {
     const item = getItems().find(item => item.id === itemId)
     if (item) {
       setSelectedEvent(item.event)
@@ -278,12 +278,12 @@ const App = () => {
                 </div>
               )
             }}
-            onItemSelect={(itemId: number) => {
+            onItemSelect={(itemId: string) => {
               if (window.innerWidth >= 576) {
                 onClick(itemId)
               }
             }}
-            onItemClick={(itemId: number) => {
+            onItemClick={(itemId: string) => {
               if (window.innerWidth < 576) {
                 onClick(itemId)
               }

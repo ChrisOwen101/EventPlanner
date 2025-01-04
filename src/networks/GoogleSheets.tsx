@@ -1,7 +1,7 @@
 import moment from "moment"
 
 export interface Event {
-    id: number
+    id: string
     name: string
     cost: string
     location: string
@@ -58,7 +58,7 @@ export async function getEventsFromSheet(): Promise<Location[]> {
 
     function parseRow(row: SheetRow): Event {
         return {
-            id: parseInt(row.id),
+            id: row.id,
             name: row.name,
             cost: row.cost,
             location: row.location,
