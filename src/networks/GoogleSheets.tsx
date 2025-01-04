@@ -1,59 +1,59 @@
-import moment from "moment";
+import moment from "moment"
 
 export interface Event {
-    id: number;
-    name: string;
+    id: number
+    name: string
     cost: string
-    location: string;
-    url: string;
-    description?: string;
-    start: moment.Moment;
-    end: moment.Moment;
-    image?: string;
-    importance: number;
+    location: string
+    url: string
+    description?: string
+    start: moment.Moment
+    end: moment.Moment
+    image?: string
+    importance: number
 }
 
 export interface Location {
-    id: number;
-    name: string;
-    events: Event[];
+    id: number
+    name: string
+    events: Event[]
 }
 
 export interface SheetRow {
-    id: string;
-    name: string;
-    cost: string;
-    location: string;
-    description: string;
-    url: string;
-    start: string;
-    end: string;
-    image: string;
-    importance: string;
+    id: string
+    name: string
+    cost: string
+    location: string
+    description: string
+    url: string
+    start: string
+    end: string
+    image: string
+    importance: string
 }
 
 
 export async function getEventsFromSheet(): Promise<Location[]> {
-    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
     const sheetId = "19-KrNeRa1HxWm-ePh88WiQBVFnKaWe-xzKnL9huvQXM"
-    const range = "Events!A1:J";
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+    const range = "Events!A1:J"
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`
 
-    const response = await fetch(url);
-    const data = await response.json();
+    const response = await fetch(url)
+    const data = await response.json()
 
-    const rows = data.values;
+    const rows = data.values
     if (!rows || rows.length === 0) {
-        return [];
+        return []
     }
 
     const convertToTitleCase = (str: string) => {
         return str.replace(
             /\w\S*/g,
             function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
             }
-        );
+        )
     }
 
     function parseRow(row: SheetRow): Event {
@@ -68,7 +68,7 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             end: moment(row.end, "DD/MM/YYYY"),
             image: row.image,
             importance: parseInt(row.importance)
-        };
+        }
     }
 
     const events: Event[] = rows
@@ -85,20 +85,20 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             end: row[7],
             image: row[8],
             importance: row[9]
-        }));
+        }))
 
     return groupByLocation(events)
 }
 
 const groupByLocation = (events: Event[]): Location[] => {
-    const locations: Location[] = [];
+    const locations: Location[] = []
     events.forEach(event => {
-        const location = locations.find(location => location.name === event.location);
+        const location = locations.find(location => location.name === event.location)
         if (location) {
-            location.events.push(event);
+            location.events.push(event)
         } else {
-            locations.push({ id: locations.length + 1, name: event.location, events: [event] });
+            locations.push({ id: locations.length + 1, name: event.location, events: [event] })
         }
-    });
-    return locations;
+    })
+    return locations
 }

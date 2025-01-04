@@ -1,6 +1,6 @@
 import './App.css'
-import { useState, useCallback, useEffect } from 'react';
-import NavBar from './NavBar';
+import { useState, useCallback, useEffect } from 'react'
+import NavBar from './NavBar'
 import Timeline, {
   TimelineHeaders,
   SidebarHeader,
@@ -8,49 +8,49 @@ import Timeline, {
   TodayMarker
 } from 'react-calendar-timeline'
 import moment from 'moment'
-import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets';
-import { Offcanvas } from 'bootstrap';
+import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
+import { Offcanvas } from 'bootstrap'
 
 
 const App = () => {
 
-  const [events, setEvents] = useState<Location[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [search, setSearch] = useState<string>('');
+  const [events, setEvents] = useState<Location[]>([])
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
+  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
     const fetchData = async () => {
       const events = await getEventsFromSheet()
       setEvents(events)
-    };
-    fetchData();
+    }
+    fetchData()
   }, [])
 
   const getFilteredEvents = useCallback(() => {
     if (search === '') {
-      return events;
+      return events
     }
 
     const filtered = events.map((location) => {
       return {
         ...location,
         events: location.events.filter((event) => {
-          return event.name.toLowerCase().includes(search.toLowerCase());
+          return event.name.toLowerCase().includes(search.toLowerCase())
         })
-      };
-    }).filter((location) => location.events.length > 0);
+      }
+    }).filter((location) => location.events.length > 0)
 
-    return filtered;
-  }, [events, search]);
+    return filtered
+  }, [events, search])
 
   const getGroups = useCallback(() => {
-    const filteredEvents = getFilteredEvents();
+    const filteredEvents = getFilteredEvents()
 
     const groups = filteredEvents.map((location) => {
       const averageImportance = location.events.reduce((sum, event) => {
         console.log
         return sum + event.importance
-      }, 0) / location.events.length;
+      }, 0) / location.events.length
 
 
       return {
@@ -58,11 +58,11 @@ const App = () => {
         title: location.name,
         stackItems: true,
         averageImportance
-      };
-    });
+      }
+    })
 
-    return groups.sort((a, b) => a.averageImportance - b.averageImportance);
-  }, [events, search]);
+    return groups.sort((a, b) => a.averageImportance - b.averageImportance)
+  }, [events, search])
 
   const getItems = useCallback(() => {
     return getFilteredEvents().flatMap((location) => location.events.map((event) => ({
@@ -92,67 +92,67 @@ const App = () => {
     return <div className="alert alert-warning" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
       <h6>No events could be found for the search term "{search}"</h6>
     </div>
-  }, [search]);
+  }, [search])
 
   const getLoading = useCallback(() => {
     return <div className="alert alert-secondary" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
       <h5>Loading...</h5>
     </div>
-  }, []);
+  }, [])
 
   const onClick = (itemId: number) => {
-    const item = getItems().find(item => item.id === itemId);
+    const item = getItems().find(item => item.id === itemId)
     if (item) {
-      setSelectedEvent(item.event);
-      const offcanvasElement = document.getElementById('offcanvasExample');
+      setSelectedEvent(item.event)
+      const offcanvasElement = document.getElementById('offcanvasExample')
       if (offcanvasElement) {
-        const offcanvas = new Offcanvas(offcanvasElement);
-        offcanvas.show();
+        const offcanvas = new Offcanvas(offcanvasElement)
+        offcanvas.show()
       }
     }
   }
 
   const renderStartEndTime = (start: moment.Moment, end: moment.Moment) => {
-    const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY';
-    const endFormat = 'Do MMM YYYY';
-    return `${start.format(startFormat)} - ${end.format(endFormat)}`;
-  };
+    const startFormat = start.year() === end.year() ? 'Do MMM' : 'Do MMM YYYY'
+    const endFormat = 'Do MMM YYYY'
+    return `${start.format(startFormat)} - ${end.format(endFormat)}`
+  }
 
   const calculateBackgroundColor = (end: moment.Moment) => {
     if (end.isBefore(moment())) {
-      return '#bdbdbd';
+      return '#bdbdbd'
     }
 
-    const now = moment();
-    const duration = moment.duration(end.diff(now));
-    const daysRemaining = duration.asDays();
-    const maxDays = 30; // Maximum days to consider for darkest color
-    const percentage = Math.max(0, Math.min(1, daysRemaining / maxDays));
+    const now = moment()
+    const duration = moment.duration(end.diff(now))
+    const daysRemaining = duration.asDays()
+    const maxDays = 30 // Maximum days to consider for darkest color
+    const percentage = Math.max(0, Math.min(1, daysRemaining / maxDays))
 
-    const startColor = { r: 189, g: 189, b: 189 }; // #bdbdbd
-    const endColor = { r: 83, g: 129, b: 92 }; // #53815c
+    const startColor = { r: 189, g: 189, b: 189 } // #bdbdbd
+    const endColor = { r: 83, g: 129, b: 92 } // #53815c
 
-    const r = Math.round(startColor.r + percentage * (endColor.r - startColor.r));
-    const g = Math.round(startColor.g + percentage * (endColor.g - startColor.g));
-    const b = Math.round(startColor.b + percentage * (endColor.b - startColor.b));
+    const r = Math.round(startColor.r + percentage * (endColor.r - startColor.r))
+    const g = Math.round(startColor.g + percentage * (endColor.g - startColor.g))
+    const b = Math.round(startColor.b + percentage * (endColor.b - startColor.b))
 
-    return `rgb(${r}, ${g}, ${b})`;
-  };
+    return `rgb(${r}, ${g}, ${b})`
+  }
 
-  const groups = getGroups();
-  const items = getItems();
-  const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== '';
+  const groups = getGroups()
+  const items = getItems()
+  const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
 
-  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-2.5, 'month');
-  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(8, 'month');
+  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-2.5, 'month')
+  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(8, 'month')
 
-  const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90;
-  const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270;
+  const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
+  const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
 
   return (
     <div>
       <NavBar onSearch={(search) => {
-        setSearch(search);
+        setSearch(search)
       }} />
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
         <div className="timeline-container">
@@ -180,7 +180,7 @@ const App = () => {
                 borderColor = '2px solid #d8d8d8'
               }
 
-              const backgroundColor = calculateBackgroundColor(item.event.end);
+              const backgroundColor = calculateBackgroundColor(item.event.end)
               const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
 
               return (
@@ -250,6 +250,6 @@ const App = () => {
       }
 
     </div >
-  );
+  )
 }
 export default App

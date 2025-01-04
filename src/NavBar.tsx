@@ -1,4 +1,4 @@
-import './navbar.css';
+import './navbar.css'
 
 function NavBar({ onSearch }: { onSearch: (search: string) => void }) {
     return (
@@ -19,13 +19,13 @@ function NavBar({ onSearch }: { onSearch: (search: string) => void }) {
                     </nav>
                     <form className="d-flex ms-auto" role="search">
                         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" onChange={(e) => {
-                            onSearch(e.target.value);
+                            onSearch(e.target.value)
                         }} />
                     </form>
                 </div>
             </div>
         </nav>
-    );
+    )
 }
 
-export default NavBar;
+export default NavBar
