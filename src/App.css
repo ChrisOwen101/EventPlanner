@@ -31,10 +31,6 @@
         height: 100%;
     }
 
-    .timeline-container * {
-        overflow-y: hidden !important;
-        touch-action: pan-x pan-y pinch-zoom !important;
-    }
 }
 
 .group p {
