@@ -130,6 +130,5 @@ body {
 }
 
 .react-calendar-timeline .rct-scroll {
-  overflow-x: hidden !important;
   touch-action: none;
 }
