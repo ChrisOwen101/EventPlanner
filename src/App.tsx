@@ -230,7 +230,6 @@ const App = () => {
                 <div key={group.id}>
                   <h1>{group.title}</h1>
                   <Timeline
-                    className="no-vertical-scroll"
                     groups={[group]}
                     items={groupItems}
                     defaultTimeStart={startTime.valueOf()}
