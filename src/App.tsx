@@ -191,11 +191,11 @@ const App = () => {
   const items = getItems()
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
 
-  const startTime = window.innerWidth <= 576 ? moment().add(-2, 'week') : moment().add(-2.5, 'month')
-  const endTime = window.innerWidth <= 576 ? moment().add(5, 'month') : moment().add(8, 'month')
+  const startTime = isPhone ? moment().add(-2, 'month') : moment().add(-2.5, 'month')
+  const endTime = isPhone ? moment().add(8, 'month') : moment().add(8, 'month')
 
-  const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
-  const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
+  const minZoom = isPhone ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
+  const maxZoom = isPhone ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
 
   console.log(groups)
   return (
@@ -299,11 +299,6 @@ const App = () => {
                   >
                     <TimelineHeaders className='header'>
                       <TodayMarker />
-                      <SidebarHeader>
-                        {({ getRootProps }) => {
-                          return <div {...getRootProps()} className='header'></div>
-                        }}
-                      </SidebarHeader>
                       <DateHeader unit="primaryHeader" className='header'></DateHeader>
                       <DateHeader className='header' />
                     </TimelineHeaders>
