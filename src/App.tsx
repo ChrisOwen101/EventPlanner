@@ -101,8 +101,6 @@ const App = () => {
   }, [events, search, filterSettings])
 
   const getItems = useCallback(() => {
-    console.log(getFilteredEvents())
-
     return getFilteredEvents().flatMap((location) => location.events.map((event) => ({
       id: event.id,
       group: location.id,
@@ -197,6 +195,7 @@ const App = () => {
   const minZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
   const maxZoom = window.innerWidth <= 576 ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
 
+  console.log(groups)
   return (
     <div>
       <NavBar
