@@ -238,6 +238,7 @@ const App = () => {
                     maxZoom={maxZoom}
                     lineHeight={54}
                     itemHeightRatio={0.75}
+                    buffer={7}
                     sidebarWidth={0}
                     groupRenderer={({ group }) => {
                       return <div className='group'><p>{group.title}</p></div>
