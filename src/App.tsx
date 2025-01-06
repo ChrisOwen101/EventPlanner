@@ -15,6 +15,7 @@ import FavouritesView from './components/FavouritesView'
 import FilterView from './components/FilterView'
 import { getFavourites } from './tools/LocalStorage'
 import { renderStartEndTime } from './tools/TimeRenderer'
+import DonationView from './components/DonationView'
 
 
 const App = () => {
@@ -159,6 +160,14 @@ const App = () => {
     }
   }
 
+  const onDonationClicked = () => {
+    const offcanvasElement = document.getElementById('offCanvasDonation')
+    if (offcanvasElement) {
+      const offcanvas = new Offcanvas(offcanvasElement)
+      offcanvas.show()
+    }
+  }
+
   const handleFilterClick = () => {
     const collapseExample = document.getElementById('collapseExample')
     if (collapseExample) {
@@ -248,7 +257,8 @@ const App = () => {
         onFilter={() => {
           handleFilterClick()
         }}
-        onFavourite={onFavouriteClicked} />
+        onFavourite={onFavouriteClicked}
+        onDonate={onDonationClicked} />
 
       <div className="collapse" id="collapseExample" style={{
         paddingLeft: '24px',
@@ -350,7 +360,9 @@ const App = () => {
       {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
         setSelectedEvent(null)
       }} />}
-      <FavouritesView allEvents={events} /> </div>
+      <FavouritesView allEvents={events} />
+      <DonationView />
+    </div>
   )
 }
 export default App
