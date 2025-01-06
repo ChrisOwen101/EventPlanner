@@ -75,14 +75,14 @@ const App = () => {
       rctScroll?.classList.remove('no-pointer-events')
     }
 
-    rctScroll?.addEventListener('touchstart', handleTouchStart)
-    rctScroll?.addEventListener('touchmove', handleTouchMove)
-    rctScroll?.addEventListener('touchend', handleTouchEnd)
+    rctScroll?.addEventListener('touchstart', handleTouchStart as EventListener)
+    rctScroll?.addEventListener('touchmove', handleTouchMove as EventListener)
+    rctScroll?.addEventListener('touchend', handleTouchEnd as EventListener)
 
     return () => {
-      rctScroll?.removeEventListener('touchstart', handleTouchStart)
-      rctScroll?.removeEventListener('touchmove', handleTouchMove)
-      rctScroll?.removeEventListener('touchend', handleTouchEnd)
+      rctScroll?.removeEventListener('touchstart', handleTouchStart as EventListener)
+      rctScroll?.removeEventListener('touchmove', handleTouchMove as EventListener)
+      rctScroll?.removeEventListener('touchend', handleTouchEnd as EventListener)
     }
   }, [])
 
