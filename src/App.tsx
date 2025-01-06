@@ -228,7 +228,7 @@ const App = () => {
               const groupItems = items.filter(item => item.group === group.id)
               return (
                 <div key={group.id}>
-                  <h1>{group.title}</h1>
+                  <h2 className="title-header">{group.title}</h2>
                   <Timeline
                     groups={[group]}
                     items={groupItems}
