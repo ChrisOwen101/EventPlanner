@@ -1,5 +1,5 @@
 import './App.css'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import NavBar from './NavBar'
 import Timeline, {
   TimelineHeaders,
@@ -187,6 +187,47 @@ const App = () => {
     return `rgb(${r}, ${g}, ${b})`
   }
 
+  const itemRenderer = useCallback(({ item, itemContext, getItemProps }: { item: any; itemContext: any; getItemProps: any }) => {
+
+    let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+
+    if (item.event.end.isBefore(moment())) {
+      borderColor = '2px solid #d8d8d8'
+    } else if (favourites.includes(item.event.id)) {
+      borderColor = '2px solid gold'
+    }
+
+    if (item.event.end.isBefore(moment())) {
+      borderColor = '2px solid #d8d8d8'
+    }
+
+    const backgroundColor = calculateBackgroundColor(item.event.end)
+    const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
+
+    return (
+      <div {...getItemProps({
+        ...item.itemProps,
+        style: {
+          ...item.itemProps.style,
+          border: borderColor,
+          background: backgroundColor,
+          color: textColor,
+        }
+      })} title={itemContext.title}>
+
+        <div
+          className="rct-item-content poppins-medium"
+          style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+        >
+          {itemContext.title}  <span className="item-dates">
+            ({renderStartEndTime(item.event.start, item.event.end)})
+          </span>
+        </div>
+
+      </div>
+    )
+  }, [favourites])
+
   const groups = getGroups()
   const items = getItems()
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
@@ -243,49 +284,7 @@ const App = () => {
                     groupRenderer={({ group }) => {
                       return <div className='group'><p>{group.title}</p></div>
                     }}
-                    itemRenderer={({ item,
-                      itemContext,
-                      getItemProps,
-                    }) => {
-
-                      let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
-
-                      if (item.event.end.isBefore(moment())) {
-                        borderColor = '2px solid #d8d8d8'
-                      } else if (favourites.includes(item.event.id)) {
-                        borderColor = '2px solid gold'
-                      }
-
-                      if (item.event.end.isBefore(moment())) {
-                        borderColor = '2px solid #d8d8d8'
-                      }
-
-                      const backgroundColor = calculateBackgroundColor(item.event.end)
-                      const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
-
-                      return (
-                        <div {...getItemProps({
-                          ...item.itemProps,
-                          style: {
-                            ...item.itemProps.style,
-                            border: borderColor,
-                            background: backgroundColor,
-                            color: textColor,
-                          }
-                        })} title={itemContext.title}>
-
-                          <div
-                            className="rct-item-content poppins-medium"
-                            style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
-                          >
-                            {itemContext.title}  <span className="item-dates">
-                              ({renderStartEndTime(item.event.start, item.event.end)})
-                            </span>
-                          </div>
-
-                        </div>
-                      )
-                    }}
+                    itemRenderer={itemRenderer}
                     onItemSelect={(itemId: string) => {
                       if (!isPhone) {
                         onClick(itemId)
@@ -322,49 +321,7 @@ const App = () => {
               groupRenderer={({ group }) => {
                 return <div className='group'><p>{group.title}</p></div>
               }}
-              itemRenderer={({ item,
-                itemContext,
-                getItemProps,
-              }) => {
-
-                let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
-
-                if (item.event.end.isBefore(moment())) {
-                  borderColor = '2px solid #d8d8d8'
-                } else if (favourites.includes(item.event.id)) {
-                  borderColor = '2px solid gold'
-                }
-
-                if (item.event.end.isBefore(moment())) {
-                  borderColor = '2px solid #d8d8d8'
-                }
-
-                const backgroundColor = calculateBackgroundColor(item.event.end)
-                const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
-
-                return (
-                  <div {...getItemProps({
-                    ...item.itemProps,
-                    style: {
-                      ...item.itemProps.style,
-                      border: borderColor,
-                      background: backgroundColor,
-                      color: textColor,
-                    }
-                  })} title={itemContext.title}>
-
-                    <div
-                      className="rct-item-content poppins-medium"
-                      style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
-                    >
-                      {itemContext.title}  <span className="item-dates">
-                        ({renderStartEndTime(item.event.start, item.event.end)})
-                      </span>
-                    </div>
-
-                  </div>
-                )
-              }}
+              itemRenderer={itemRenderer}
               onItemSelect={(itemId: string) => {
                 if (!isPhone) {
                   onClick(itemId)
