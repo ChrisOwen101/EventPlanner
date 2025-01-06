@@ -50,6 +50,42 @@ const App = () => {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    const rctScroll = document.querySelector('.rct-scroll')
+
+    let startX: number, startY: number
+
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].pageX
+      startY = e.touches[0].pageY
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const moveX = e.touches[0].pageX - startX
+      const moveY = e.touches[0].pageY - startY
+
+      if (Math.abs(moveY) > Math.abs(moveX)) {
+        rctScroll?.classList.add('no-pointer-events')
+      } else {
+        rctScroll?.classList.remove('no-pointer-events')
+      }
+    }
+
+    const handleTouchEnd = () => {
+      rctScroll?.classList.remove('no-pointer-events')
+    }
+
+    rctScroll?.addEventListener('touchstart', handleTouchStart)
+    rctScroll?.addEventListener('touchmove', handleTouchMove)
+    rctScroll?.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      rctScroll?.removeEventListener('touchstart', handleTouchStart)
+      rctScroll?.removeEventListener('touchmove', handleTouchMove)
+      rctScroll?.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [])
+
   const getFilteredEvents = useCallback(() => {
     const filtered = events
       .map((location) => {
