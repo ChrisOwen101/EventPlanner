@@ -31,6 +31,11 @@
         height: 100%;
     }
 
+    .rct-scroll {
+        overflow-y: hidden !important;
+        touch-action: pan-x pan-y pinch-zoom !important;
+    }
+
 }
 
 .group p {
