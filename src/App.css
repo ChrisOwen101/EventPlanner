@@ -2,6 +2,10 @@
     background: #324d37;
 }
 
+.header-alt {
+    background: #838383;
+}
+
 @media (min-width: 576px) {
     .timeline-container {
         margin-left: 24px;
@@ -69,7 +73,10 @@
 .title-header {
     background: #324d37;
     color: #fff;
-    padding: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     margin-top: 16px;
     margin-bottom: 16px;
 }

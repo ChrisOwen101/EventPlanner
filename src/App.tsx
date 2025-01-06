@@ -269,7 +269,7 @@ const App = () => {
               const groupItems = items.filter(item => item.group === group.id)
               return (
                 <div key={group.id}>
-                  <h2 className="title-header">{group.title}</h2>
+                  <h3 className="title-header">{group.title}</h3>
                   <Timeline
                     groups={[group]}
                     items={groupItems}
@@ -296,10 +296,10 @@ const App = () => {
                       }
                     }}
                   >
-                    <TimelineHeaders className='header'>
+                    <TimelineHeaders className='header-alt'>
                       <TodayMarker />
-                      <DateHeader unit="primaryHeader" className='header'></DateHeader>
-                      <DateHeader className='header' />
+                      <DateHeader unit="primaryHeader" className='header-alt'></DateHeader>
+                      <DateHeader className='header-alt' />
                     </TimelineHeaders>
                   </Timeline>
                 </div>

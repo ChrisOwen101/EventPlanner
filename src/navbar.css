@@ -5,3 +5,15 @@
         border-radius: 12px;
     }
 }
+
+@media (max-width: 576px) {
+    .custom-navbar {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+.logo {
+    font-size: 30px;
+    color: white;
+}
