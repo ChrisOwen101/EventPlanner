@@ -30,6 +30,21 @@
         align-items: center;
         height: 100%;
     }
+
+    .react-calendar-timeline {
+        overflow: hidden !important;
+        touch-action: none;
+    }
+
+    .react-calendar-timeline * {
+        overflow: hidden !important;
+        touch-action: none;
+    }
+
+    .no-vertical-scroll .react-calendar-timeline {
+        overflow-y: hidden !important;
+        touch-action: pan-y;
+    }
 }
 
 .group p {
