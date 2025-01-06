@@ -26,6 +26,8 @@ const App = () => {
 
   const [favourites, setFavourites] = useState<string[]>(getFavourites())
 
+  const isPhone = window.innerWidth <= 576
+
   useEffect(() => {
     const handleStorageChange = () => {
       // When local storage changes, update the favourites list
@@ -220,90 +222,182 @@ const App = () => {
       </div>
 
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
-        <div className="timeline-container">
-          <Timeline
-            groups={getGroups()}
-            items={getItems()}
-            defaultTimeStart={startTime.valueOf()}
-            defaultTimeEnd={endTime.valueOf()}
-            minZoom={minZoom}
-            maxZoom={maxZoom}
-            lineHeight={54}
-            itemHeightRatio={0.75}
-            sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
-            groupRenderer={({ group }) => {
-              return <div className='group'><p>{group.title}</p></div>
-            }}
-            itemRenderer={({ item,
-              itemContext,
-              getItemProps,
-            }) => {
-
-              let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
-
-              if (item.event.end.isBefore(moment())) {
-                borderColor = '2px solid #d8d8d8'
-              } else if (favourites.includes(item.event.id)) {
-                borderColor = '2px solid gold'
-              }
-
-              if (item.event.end.isBefore(moment())) {
-                borderColor = '2px solid #d8d8d8'
-              }
-
-              const backgroundColor = calculateBackgroundColor(item.event.end)
-              const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
-
+        isPhone ? (
+          <div>
+            {groups.map(group => {
+              const groupItems = items.filter(item => item.group === group.id)
               return (
-                <div {...getItemProps({
-                  ...item.itemProps,
-                  style: {
-                    ...item.itemProps.style,
-                    border: borderColor,
-                    background: backgroundColor,
-                    color: textColor,
-                  }
-                })} title={itemContext.title}>
+                <div key={group.id}>
+                  <h1>{group.title}</h1>
+                  <Timeline
+                    groups={[group]}
+                    items={groupItems}
+                    defaultTimeStart={startTime.valueOf()}
+                    defaultTimeEnd={endTime.valueOf()}
+                    minZoom={minZoom}
+                    maxZoom={maxZoom}
+                    lineHeight={54}
+                    itemHeightRatio={0.75}
+                    sidebarWidth={0}
+                    groupRenderer={({ group }) => {
+                      return <div className='group'><p>{group.title}</p></div>
+                    }}
+                    itemRenderer={({ item,
+                      itemContext,
+                      getItemProps,
+                    }) => {
 
-                  <div
-                    className="rct-item-content poppins-medium"
-                    style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                      let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+
+                      if (item.event.end.isBefore(moment())) {
+                        borderColor = '2px solid #d8d8d8'
+                      } else if (favourites.includes(item.event.id)) {
+                        borderColor = '2px solid gold'
+                      }
+
+                      if (item.event.end.isBefore(moment())) {
+                        borderColor = '2px solid #d8d8d8'
+                      }
+
+                      const backgroundColor = calculateBackgroundColor(item.event.end)
+                      const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
+
+                      return (
+                        <div {...getItemProps({
+                          ...item.itemProps,
+                          style: {
+                            ...item.itemProps.style,
+                            border: borderColor,
+                            background: backgroundColor,
+                            color: textColor,
+                          }
+                        })} title={itemContext.title}>
+
+                          <div
+                            className="rct-item-content poppins-medium"
+                            style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                          >
+                            {itemContext.title}  <span className="item-dates">
+                              ({renderStartEndTime(item.event.start, item.event.end)})
+                            </span>
+                          </div>
+
+                        </div>
+                      )
+                    }}
+                    onItemSelect={(itemId: string) => {
+                      if (!isPhone) {
+                        onClick(itemId)
+                      }
+                    }}
+                    onItemClick={(itemId: string) => {
+                      if (isPhone) {
+                        onClick(itemId)
+                      }
+                    }}
                   >
-                    {itemContext.title}  <span className="item-dates">
-                      ({renderStartEndTime(item.event.start, item.event.end)})
-                    </span>
-                  </div>
-
+                    <TimelineHeaders className='header'>
+                      <TodayMarker />
+                      <SidebarHeader>
+                        {({ getRootProps }) => {
+                          return <div {...getRootProps()} className='header'></div>
+                        }}
+                      </SidebarHeader>
+                      <DateHeader unit="primaryHeader" className='header'></DateHeader>
+                      <DateHeader className='header' />
+                    </TimelineHeaders>
+                  </Timeline>
                 </div>
               )
-            }}
-            onItemSelect={(itemId: string) => {
-              if (window.innerWidth >= 576) {
-                onClick(itemId)
-              }
-            }}
-            onItemClick={(itemId: string) => {
-              if (window.innerWidth < 576) {
-                onClick(itemId)
-              }
-            }}
-          >
-            <TimelineHeaders className='header'>
-              <TodayMarker />
-              <SidebarHeader>
-                {({ getRootProps }) => {
-                  return <div {...getRootProps()} className='header'></div>
-                }}
-              </SidebarHeader>
-              <DateHeader unit="primaryHeader" className='header'></DateHeader>
-              <DateHeader className='header' />
-            </TimelineHeaders>
-          </Timeline>
-          {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
-            setSelectedEvent(null)
-          }} />}
-          <FavouritesView allEvents={events} /> </div>}
-    </div >
+            })}
+          </div>
+        ) : (
+          <div className="timeline-container">
+            <Timeline
+              groups={groups}
+              items={items}
+              defaultTimeStart={startTime.valueOf()}
+              defaultTimeEnd={endTime.valueOf()}
+              minZoom={minZoom}
+              maxZoom={maxZoom}
+              lineHeight={54}
+              itemHeightRatio={0.75}
+              sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
+              groupRenderer={({ group }) => {
+                return <div className='group'><p>{group.title}</p></div>
+              }}
+              itemRenderer={({ item,
+                itemContext,
+                getItemProps,
+              }) => {
+
+                let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
+
+                if (item.event.end.isBefore(moment())) {
+                  borderColor = '2px solid #d8d8d8'
+                } else if (favourites.includes(item.event.id)) {
+                  borderColor = '2px solid gold'
+                }
+
+                if (item.event.end.isBefore(moment())) {
+                  borderColor = '2px solid #d8d8d8'
+                }
+
+                const backgroundColor = calculateBackgroundColor(item.event.end)
+                const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
+
+                return (
+                  <div {...getItemProps({
+                    ...item.itemProps,
+                    style: {
+                      ...item.itemProps.style,
+                      border: borderColor,
+                      background: backgroundColor,
+                      color: textColor,
+                    }
+                  })} title={itemContext.title}>
+
+                    <div
+                      className="rct-item-content poppins-medium"
+                      style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
+                    >
+                      {itemContext.title}  <span className="item-dates">
+                        ({renderStartEndTime(item.event.start, item.event.end)})
+                      </span>
+                    </div>
+
+                  </div>
+                )
+              }}
+              onItemSelect={(itemId: string) => {
+                if (!isPhone) {
+                  onClick(itemId)
+                }
+              }}
+              onItemClick={(itemId: string) => {
+                if (isPhone) {
+                  onClick(itemId)
+                }
+              }}
+            >
+              <TimelineHeaders className='header'>
+                <TodayMarker />
+                <SidebarHeader>
+                  {({ getRootProps }) => {
+                    return <div {...getRootProps()} className='header'></div>
+                  }}
+                </SidebarHeader>
+                <DateHeader unit="primaryHeader" className='header'></DateHeader>
+                <DateHeader className='header' />
+              </TimelineHeaders>
+            </Timeline>
+          </div>
+        )
+      }
+      {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
+        setSelectedEvent(null)
+      }} />}
+      <FavouritesView allEvents={events} /> </div>
   )
 }
 export default App
