@@ -10,7 +10,8 @@ export interface Event {
     start: moment.Moment
     end: moment.Moment
     image?: string
-    importance: number
+    importance: number,
+    tags: string[] | undefined
 }
 
 export interface Location {
@@ -29,14 +30,15 @@ export interface SheetRow {
     start: string
     end: string
     image: string
-    importance: string
+    importance: string,
+    tags: string
 }
 
 
 export async function getEventsFromSheet(): Promise<Location[]> {
     const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
     const sheetId = "19-KrNeRa1HxWm-ePh88WiQBVFnKaWe-xzKnL9huvQXM"
-    const range = "Events!A1:J"
+    const range = "Events!A1:K"
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`
 
     const response = await fetch(url)
@@ -67,7 +69,8 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             start: moment(row.start, "DD/MM/YYYY"),
             end: moment(row.end, "DD/MM/YYYY"),
             image: row.image,
-            importance: parseInt(row.importance)
+            importance: parseInt(row.importance),
+            tags: row.tags?.split(',').map(tag => convertToTitleCase(tag.trim()))
         }
     }
 
@@ -84,7 +87,8 @@ export async function getEventsFromSheet(): Promise<Location[]> {
             start: row[6],
             end: row[7],
             image: row[8],
-            importance: row[9]
+            importance: row[9],
+            tags: row[10]
         }))
 
     return groupByLocation(events)

@@ -18,7 +18,6 @@ const CalendarButtons: React.FC<CalendarButtonsProps> = ({ title, description, l
 
     return (
         <div className="calendar-buttons">
-            <hr />
             <button type="button" className="btn btn-secondary" onClick={() => window.open(calendarUrl, '_blank')}>Add to Google Calendar</button>
             <button type="button" className="btn btn-secondary" onClick={() => window.open(outlookUrl, '_blank')}>Add to Outlook</button>
             <button type="button" className="btn btn-secondary" onClick={() => window.open(yahooUrl, '_blank')}>Add to Yahoo</button>

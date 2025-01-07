@@ -4,6 +4,7 @@ import { FaHeart } from 'react-icons/fa'
 import { renderStartEndTime } from '../tools/TimeRenderer'
 import { getFavourites, toggleFavourite } from '../tools/LocalStorage'
 import CalendarButtons from './CalendarButtons'
+import './ItemView.css'
 
 interface ItemViewProps {
     selectedEvent: Event | null
@@ -45,16 +46,23 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
                         <p><strong>Venue:</strong> {selectedEvent.location}</p>
                         <p><strong>Entry:</strong> {selectedEvent.cost}</p>
                         <p>{selectedEvent.description}</p>
-                        <div>
-                            <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>View Event</button>
-                            <CalendarButtons
-                                title={selectedEvent.name}
-                                description={selectedEvent.description || ''}
-                                location={selectedEvent.location}
-                                start={selectedEvent.start}
-                                end={selectedEvent.end}
-                            />
-                        </div>
+                        <button type="button" className="btn btn-primary" onClick={() => window.open(selectedEvent.url, '_blank')}>View Event</button>
+                        <hr />
+                        <CalendarButtons
+                            title={selectedEvent.name}
+                            description={selectedEvent.description || ''}
+                            location={selectedEvent.location}
+                            start={selectedEvent.start}
+                            end={selectedEvent.end}
+                        />
+                        <hr />
+                        {selectedEvent.tags && (
+                            <div className="chip-container">
+                                {selectedEvent.tags.map((tag, index) => (
+                                    <span key={index} className="chip">{tag}</span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

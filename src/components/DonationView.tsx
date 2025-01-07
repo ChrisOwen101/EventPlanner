@@ -1,9 +1,7 @@
 import React from 'react'
-import { Location } from '../networks/GoogleSheets'
 import './FavouritesView.css'
 
 interface DonationViewProps {
-    allEvents: Location[]
 }
 
 const DonationView: React.FC<DonationViewProps> = () => {
