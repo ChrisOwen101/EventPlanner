@@ -196,7 +196,7 @@ const App = () => {
     return `rgb(${r}, ${g}, ${b})`
   }
 
-  const itemRenderer = useCallback(({ item, itemContext, getItemProps }: { item: any; itemContext: any; getItemProps: any }) => {
+  const itemRenderer = ({ item, itemContext, getItemProps }: { item: any; itemContext: any; getItemProps: any }) => {
 
     let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
 
@@ -235,7 +235,7 @@ const App = () => {
 
       </div>
     )
-  }, [favourites])
+  }
 
   const groups = getGroups()
   const items = getItems()
