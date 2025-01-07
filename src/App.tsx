@@ -213,16 +213,21 @@ const App = () => {
     const backgroundColor = calculateBackgroundColor(item.event.end)
     const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
 
+    const props = getItemProps({
+      ...item.itemProps,
+      style: {
+        ...item.itemProps.style,
+        border: borderColor,
+        background: backgroundColor,
+        color: textColor,
+      }
+    })
+
+    // remove key from props
+    delete props.key
+
     return (
-      <div {...getItemProps({
-        ...item.itemProps,
-        style: {
-          ...item.itemProps.style,
-          border: borderColor,
-          background: backgroundColor,
-          color: textColor,
-        }
-      })} title={itemContext.title}>
+      <div key={item.id} {...props} title={itemContext.title}>
 
         <div
           className="rct-item-content poppins-medium"
