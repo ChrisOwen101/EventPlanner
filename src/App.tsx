@@ -1,12 +1,6 @@
 import './App.css'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import NavBar from './NavBar'
-import Timeline, {
-  TimelineHeaders,
-  SidebarHeader,
-  DateHeader,
-  TodayMarker
-} from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
 import { Offcanvas, Collapse } from 'bootstrap'
@@ -14,8 +8,10 @@ import ItemView from './components/ItemView'
 import FavouritesView from './components/FavouritesView'
 import FilterView from './components/FilterView'
 import { getFavourites } from './tools/LocalStorage'
-import { renderStartEndTime } from './tools/TimeRenderer'
 import DonationView from './components/DonationView'
+import { useEpg, Epg, Layout, Channel, Program } from '@nessprim/planby-pro'
+import { CustomEvent } from './components/CustomEvent'
+import { CustomGroup } from './components/CustomGroup'
 
 
 const App = () => {
@@ -83,7 +79,7 @@ const App = () => {
 
   }, [events, search, filterSettings])
 
-  const getGroups = useCallback(() => {
+  const groups = useMemo(() => {
     const filteredEvents = getFilteredEvents()
 
     const groups = filteredEvents.map((location) => {
@@ -93,38 +89,24 @@ const App = () => {
 
 
       return {
-        id: location.id,
-        title: location.name,
-        stackItems: true,
-        averageImportance
+        uuid: location.id.toString(),
+        title: location.name
       }
     })
 
-    return groups.sort((a, b) => a.averageImportance - b.averageImportance)
+    return groups
   }, [events, search, filterSettings])
 
-  const getItems = useCallback(() => {
+  const items = useMemo(() => {
     return getFilteredEvents().flatMap((location) => location.events.map((event) => ({
+      channelUuid: location.id.toString(),
+      description: event.description || 'No description available',
       id: event.id,
-      group: location.id,
+      image: event.image || 'https://via.placeholder.com',
+      since: moment(event.start).format('YYYY-MM-DDTHH:mm:ss'),
+      till: moment(event.end).format('YYYY-MM-DDTHH:mm:ss'),
       title: event.name,
-      start_time: event.start,
-      end_time: event.end,
-      canMove: false,
-      canResize: false,
-      canChangeGroup: false,
       event: event,
-      itemProps: {
-        style: {
-          background: '#53815c',
-          borderRadius: '4px',
-          border: '1px solid #53815c',
-          color: 'white',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          overflow: 'hidden',
-        }
-      }
     })))
   }, [events, search, filterSettings])
 
@@ -141,7 +123,7 @@ const App = () => {
   }, [])
 
   const onClick = (itemId: string) => {
-    const item = getItems().find(item => item.id === itemId)
+    const item = items.find(item => item.id === itemId)
     if (item) {
       setSelectedEvent(item.event)
       const offcanvasElement = document.getElementById('offcanvasExample')
@@ -175,69 +157,34 @@ const App = () => {
     }
   }
 
-  const calculateBackgroundColor = (end: moment.Moment) => {
-    if (end.isBefore(moment())) {
-      return '#bdbdbd'
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event)
+    const offcanvasElement = document.getElementById('offcanvasExample')
+    if (offcanvasElement) {
+      const offcanvas = new Offcanvas(offcanvasElement)
+      offcanvas.show()
     }
-
-    return '#53815c'
   }
 
-  const itemRenderer = ({ item, itemContext, getItemProps }: { item: any; itemContext: any; getItemProps: any }) => {
-
-    let borderColor = itemContext.selected ? '2px solid #a3b18a' : item.itemProps.style.border
-
-    if (item.event.end.isBefore(moment())) {
-      borderColor = '2px solid #d8d8d8'
-    } else if (favourites.includes(item.event.id)) {
-      borderColor = '2px solid gold'
-    }
-
-    if (item.event.end.isBefore(moment())) {
-      borderColor = '2px solid #d8d8d8'
-    }
-
-    const backgroundColor = calculateBackgroundColor(item.event.end)
-    const textColor = item.event.end.isBefore(moment()) ? 'rgb(216, 216, 216)' : item.itemProps.style.color
-
-    const props = getItemProps({
-      ...item.itemProps,
-      style: {
-        ...item.itemProps.style,
-        border: borderColor,
-        background: backgroundColor,
-        color: textColor,
-      }
-    })
-
-    // remove key from props
-    delete props.key
-
-    return (
-      <div key={item.id} {...props} title={itemContext.title}>
-
-        <div
-          className="rct-item-content poppins-medium"
-          style={{ maxHeight: `${itemContext.dimensions.height}`, textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}
-        >
-          {itemContext.title}  <span className="item-dates">
-            ({renderStartEndTime(item.event.start, item.event.end)})
-          </span>
-        </div>
-
-      </div>
-    )
-  }
-
-  const groups = getGroups()
-  const items = getItems()
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
 
-  const startTime = isPhone ? moment().add(-2, 'month') : moment().add(-2.5, 'month')
-  const endTime = isPhone ? moment().add(8, 'month') : moment().add(8, 'month')
-
-  const minZoom = isPhone ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
-  const maxZoom = isPhone ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
+  const {
+    getEpgProps,
+    getLayoutProps,
+    onScrollToNow,
+    onScrollLeft,
+    onScrollRight,
+  } = useEpg({
+    epg: items,
+    channels: groups,
+    startDate: '2024-12-01T00:00:00', // or 2022-02-02T00:00:00
+    endDate: '2026-12-31T00:00:00', // or 2022-02-02T00:00:00
+    mode: { type: 'month', style: 'modern' },
+    overlap: {
+      enabled: true,
+      mode: "stack"
+    },
+  })
 
   return (
     <div>
@@ -260,89 +207,17 @@ const App = () => {
       </div>
 
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
-        isPhone ? (
-          <div>
-            {groups.map(group => {
-              const groupItems = items.filter(item => item.group === group.id)
-              return (
-                <div key={group.id}>
-                  <h3 className="title-header">{group.title}</h3>
-                  <Timeline
-                    groups={[group]}
-                    items={groupItems}
-                    defaultTimeStart={startTime.valueOf()}
-                    defaultTimeEnd={endTime.valueOf()}
-                    minZoom={minZoom}
-                    maxZoom={maxZoom}
-                    lineHeight={54}
-                    itemHeightRatio={0.75}
-                    buffer={7}
-                    sidebarWidth={0}
-                    groupRenderer={({ group }) => {
-                      return <div className='group'><p>{group.title}</p></div>
-                    }}
-                    itemRenderer={itemRenderer}
-                    onItemSelect={(itemId: string) => {
-                      if (!isPhone) {
-                        onClick(itemId)
-                      }
-                    }}
-                    onItemClick={(itemId: string) => {
-                      if (isPhone) {
-                        onClick(itemId)
-                      }
-                    }}
-                  >
-                    <TimelineHeaders className='header-alt'>
-                      <TodayMarker />
-                      <DateHeader unit="primaryHeader" className='header-alt'></DateHeader>
-                      <DateHeader className='header-alt' />
-                    </TimelineHeaders>
-                  </Timeline>
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <div className="timeline-container">
-            <Timeline
-              groups={groups}
-              items={items}
-              defaultTimeStart={startTime.valueOf()}
-              defaultTimeEnd={endTime.valueOf()}
-              minZoom={minZoom}
-              maxZoom={maxZoom}
-              lineHeight={54}
-              itemHeightRatio={0.75}
-              sidebarWidth={window.innerWidth <= 576 ? 100 : 150}
-              groupRenderer={({ group }) => {
-                return <div className='group'><p>{group.title}</p></div>
-              }}
-              itemRenderer={itemRenderer}
-              onItemSelect={(itemId: string) => {
-                if (!isPhone) {
-                  onClick(itemId)
-                }
-              }}
-              onItemClick={(itemId: string) => {
-                if (isPhone) {
-                  onClick(itemId)
-                }
-              }}
-            >
-              <TimelineHeaders className='header'>
-                <TodayMarker />
-                <SidebarHeader>
-                  {({ getRootProps }) => {
-                    return <div {...getRootProps()} className='header'></div>
-                  }}
-                </SidebarHeader>
-                <DateHeader unit="primaryHeader" className='header'></DateHeader>
-                <DateHeader className='header' />
-              </TimelineHeaders>
-            </Timeline>
-          </div>
-        )
+        <Epg {...getEpgProps()} >
+          <Layout
+            {...getLayoutProps()}
+            renderProgram={({ program, ...rest }) => (
+              <CustomEvent key={program.data.id} program={program} onEventClick={onClick} {...rest} />
+            )}
+            renderChannel={({ channel, ...rest }) => (
+              <CustomGroup key={channel.uuid} channel={channel} {...rest} />
+            )}
+          />
+        </Epg>
       }
       {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
         setSelectedEvent(null)

@@ -42,7 +42,7 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
             <div className="offcanvas-body">
                 {selectedEvent && (
                     <div>
-                        <p><strong>Running:</strong> {renderStartEndTime(selectedEvent.start, selectedEvent.end)}</p>
+                        <p><strong>Running:</strong> {renderStartEndTime(selectedEvent.start.toString(), selectedEvent.end.toString())}</p>
                         <p><strong>Venue:</strong> {selectedEvent.location}</p>
                         <p><strong>Entry:</strong> {selectedEvent.cost}</p>
                         <p>{selectedEvent.description}</p>

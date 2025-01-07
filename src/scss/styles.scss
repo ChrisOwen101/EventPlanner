@@ -19,3 +19,59 @@ $offcanvas-horizontal-width: min(600px, 100%);
 
 // Import Bootstrap and custom styles
 @import "bootstrap/scss/bootstrap";
+
+.planby {
+  /* Layout */
+  .planby-layout {
+  }
+  .planby-corner-box {
+  }
+
+  /* Line */
+  .planby-line {
+  }
+
+  /* Current time */
+  .planby-current-time {
+  }
+  .planby-current-content {
+  }
+
+  /* Channels */
+  .planby-channels {
+    color: #28a745 !important;
+  }
+
+  /* Channel */
+  .planby-channel {
+    color: #28a745 !important;
+  }
+
+  /* Program */
+  .planby-program {
+    color: #28a745 !important;
+  }
+  .planby-program-content {
+    color: #28a745 !important;
+  }
+  .planby-program-flex {
+  }
+  .planby-program-stack {
+  }
+  .planby-program-title {
+  }
+  .planby-program-text {
+  }
+
+  /* Timeline */
+  .planby-timeline-wrapper {
+  }
+  .planby-timeline-box {
+  }
+  .planby-timeline-time {
+  }
+  .planby-timeline-dividers {
+  }
+  .planby-timeline-wrapper {
+  }
+}

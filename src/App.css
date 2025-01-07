@@ -6,58 +6,6 @@
     background: #838383;
 }
 
-@media (min-width: 576px) {
-    .timeline-container {
-        margin-left: 24px;
-        margin-right: 24px;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #e0e0e0;
-    }
-
-    .group {
-        padding-left: 12px;
-        display: flex;
-        align-items: center;
-        height: 100%;
-    }
-}
-
-@media (max-width: 576px) {
-    .timeline-container {
-        margin-top: 24px;
-    }
-
-    .group {
-        width: 100px;
-        display: flex;
-        align-items: center;
-        height: 100%;
-    }
-
-    .rct-scroll {
-        overflow-y: hidden !important;
-        touch-action: pan-x pan-y pinch-zoom !important;
-    }
-
-}
-
-.group p {
-    word-break: break-normal;
-    white-space: normal;
-    line-height: 1.5;
-}
-
-.item-dates {
-    color: rgb(204, 204, 204);
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
-
-/* Fade in on item hover */
-.rct-item:hover .item-dates {
-    opacity: 1;
-}
 
 .calendar-buttons {
     display: flex;
