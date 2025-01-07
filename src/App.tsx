@@ -180,20 +180,7 @@ const App = () => {
       return '#bdbdbd'
     }
 
-    const now = moment()
-    const duration = moment.duration(end.diff(now))
-    const daysRemaining = duration.asDays()
-    const maxDays = 30 // Maximum days to consider for darkest color
-    const percentage = Math.max(0, Math.min(1, daysRemaining / maxDays))
-
-    const startColor = { r: 189, g: 189, b: 189 } // #bdbdbd
-    const endColor = { r: 83, g: 129, b: 92 } // #53815c
-
-    let r = Math.round(startColor.r + percentage * (endColor.r - startColor.r))
-    let g = Math.round(startColor.g + percentage * (endColor.g - startColor.g))
-    let b = Math.round(startColor.b + percentage * (endColor.b - startColor.b))
-
-    return `rgb(${r}, ${g}, ${b})`
+    return '#53815c'
   }
 
   const itemRenderer = ({ item, itemContext, getItemProps }: { item: any; itemContext: any; getItemProps: any }) => {
@@ -252,16 +239,11 @@ const App = () => {
   const minZoom = isPhone ? 1000 * 60 * 60 * 24 * 60 : 1000 * 60 * 60 * 24 * 90
   const maxZoom = isPhone ? 1000 * 60 * 60 * 24 * 270 : 1000 * 60 * 60 * 24 * 270
 
-  console.log(groups)
   return (
     <div>
       <NavBar
-        onSearch={(search) => {
-          setSearch(search)
-        }}
-        onFilter={() => {
-          handleFilterClick()
-        }}
+        onSearch={setSearch}
+        onFilter={handleFilterClick}
         onFavourite={onFavouriteClicked}
         onDonate={onDonationClicked} />
 
