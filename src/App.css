@@ -6,7 +6,6 @@
     background: #838383;
 }
 
-
 .calendar-buttons {
     display: flex;
     flex-direction: column;
@@ -27,4 +26,12 @@
     padding-bottom: 16px;
     margin-top: 16px;
     margin-bottom: 16px;
+}
+
+.timeline-container {
+    margin-left: 24px;
+    margin-right: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
 }

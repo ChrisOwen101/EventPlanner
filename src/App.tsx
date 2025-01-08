@@ -207,17 +207,19 @@ const App = () => {
       </div>
 
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
-        <Epg {...getEpgProps()} >
-          <Layout
-            {...getLayoutProps()}
-            renderProgram={({ program, ...rest }) => (
-              <CustomEvent key={program.data.id} program={program} onEventClick={onClick} {...rest} />
-            )}
-            renderChannel={({ channel, ...rest }) => (
-              <CustomGroup key={channel.uuid} channel={channel} {...rest} />
-            )}
-          />
-        </Epg>
+        <div className='timeline-container'>
+          <Epg {...getEpgProps()} >
+            <Layout
+              {...getLayoutProps()}
+              renderProgram={({ program, ...rest }) => (
+                <CustomEvent key={program.data.id} program={program} onEventClick={onClick} {...rest} />
+              )}
+              renderChannel={({ channel, ...rest }) => (
+                <CustomGroup key={channel.uuid} channel={channel} {...rest} />
+              )}
+            />
+          </Epg>
+        </div>
       }
       {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
         setSelectedEvent(null)
