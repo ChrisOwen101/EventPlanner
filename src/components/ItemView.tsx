@@ -37,6 +37,10 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent }) => {
             return false
         }
 
+        if (image.toLowerCase().includes('Do not fill in')) {
+            return false
+        }
+
         return true
     }
 
