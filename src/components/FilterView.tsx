@@ -33,7 +33,7 @@ const FilterView: React.FC<FilterViewProps> = ({ onFilterChange }) => {
                 <div className="card card-body">
                     <div className="form-check">
                         <input
-                            className="form-check-input"
+                            className="checkbox"
                             type="checkbox"
                             checked={showPaid}
                             onChange={handlePaidChange}
@@ -45,7 +45,7 @@ const FilterView: React.FC<FilterViewProps> = ({ onFilterChange }) => {
                     </div>
                     <div className="form-check">
                         <input
-                            className="form-check-input"
+                            className="checkbox"
                             type="checkbox"
                             checked={showFree}
                             onChange={handleFreeChange}

@@ -16,7 +16,7 @@ import FilterView from './components/FilterView'
 import { getFavourites } from './tools/LocalStorage'
 import { renderStartEndTime } from './tools/TimeRenderer'
 import DonationView from './components/DonationView'
-import { Alert, Modal, Collapse, Drawer } from '@mantine/core'
+import { Alert, Modal, Collapse, Drawer, Text } from '@mantine/core'
 
 
 const App = () => {
@@ -136,8 +136,8 @@ const App = () => {
 
   const getNoEventsFound = useCallback(() => {
     return (
-      <Alert color="yellow" radius="md">
-        No events found for "{search}"
+      <Alert color="yellow" radius="md" m="lg">
+        <Text>No events found for "{search}"</Text>
       </Alert>
     )
   }, [search])
