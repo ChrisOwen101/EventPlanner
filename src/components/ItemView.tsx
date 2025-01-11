@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Button, Group, Stack, Menu, AspectRatio, Overlay } from '@mantine/core'
+import { Button, Stack, Menu, AspectRatio, Overlay } from '@mantine/core'
 import { Event } from '../networks/GoogleSheets'
 import { FaHeart } from 'react-icons/fa'
 import { renderStartEndTime } from '../tools/TimeRenderer'
@@ -9,10 +9,9 @@ import './ItemView.css' // retains any custom styles, e.g. for chips
 
 interface ItemViewProps {
     selectedEvent: Event | null
-    onClose: () => void
 }
 
-const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
+const ItemView: React.FC<ItemViewProps> = ({ selectedEvent }) => {
     if (!selectedEvent) return null
 
     const onFavouriteClicked = () => {

@@ -346,10 +346,6 @@ const App = () => {
         {selectedEvent && (
           <ItemView
             selectedEvent={selectedEvent}
-            onClose={() => {
-              setSelectedEvent(null)
-              setSelectedEventOpen(false)
-            }}
           />
         )}
       </Drawer>
