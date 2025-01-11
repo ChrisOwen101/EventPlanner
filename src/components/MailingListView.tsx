@@ -1,6 +1,5 @@
 import React from 'react'
-import { Button, Text, Input, Stack } from '@mantine/core'
-import axios from 'axios'
+import { Text } from '@mantine/core'
 import './DonationView.css'
 
 interface MailingListViewProps {

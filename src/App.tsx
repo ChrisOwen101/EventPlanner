@@ -17,7 +17,6 @@ import { getFavourites, seenMailingList, setSeenMailingList } from './tools/Loca
 import { renderStartEndTime } from './tools/TimeRenderer'
 import DonationView from './components/DonationView'
 import { Alert, Modal, Collapse, Drawer, Text, Button, Group } from '@mantine/core'
-import { MdOutlineMail } from 'react-icons/md'
 import MailingListView from './components/MailingListView'
 
 
