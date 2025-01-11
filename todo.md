@@ -1,9 +1,7 @@
-# Soon
+# Paid Features
 
 - Add simple accounts (with Auth0)
 - Add ability to have subs (with Braintree)
-- Add tags to events (auto-generate from event name and description)
-- Add analytics
 
 # Future
 

@@ -12,7 +12,7 @@ const DonationView: React.FC<DonationViewProps> = () => {
                 Thank you for considering a donation to Exhibitions.London
             </Text>
             <Text mb="md">
-                Hi! I'm <a href="https://www.linkedin.com/in/chrisowen101/" target="_blank" rel="noopener noreferrer">Chris</a> and I built this website. I built this website because I was perennially missing exhibitions that I wanted to see and I'd rather wrote code than try to change myself.
+                Hi! I'm <a href="https://www.linkedin.com/in/chrisowen101/" target="_blank" rel="noopener noreferrer">Chris</a> and I built this website. I built it because I was perennially missing exhibitions that I wanted to see and I'd rather write code than try to change myself.
                 <br />
                 <br />
                 There are some small costs associated with running this website, so - if you find it useful - I would be grateful if you could consider donating. I've made it easy to donate using Stripe.
