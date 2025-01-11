@@ -14,11 +14,21 @@ interface FavouritesViewProps {
 const FavouritesView: React.FC<FavouritesViewProps> = ({ allEvents }) => {
     const favourites = getFavourites()
 
+    const getNoFavouritesContent = () => {
+        return <div>
+            <Text>You currently have no favourites. Click the <FaHeart /> on any Event to favourite it.</Text>
+            <br />
+            <Text>If nothing on here interests you right now, join the mailing list and I'll email you when I update the events</Text>
+            <br />
+            <Button variant="filled" onClick={() => window.open('https://gaggle.email/join/london.exhibitions@gaggle.email', '_blank')}>Join Mailing List</Button>
+        </div>
+    }
+
     return (
         <div className="favourites-view">
             <Title order={3}>Your Favourites</Title>
             <br />
-            {favourites.length === 0 && <Text>You currently have no favourites. Click the <FaHeart /> on any Event to favourite it.</Text>}
+            {favourites.length === 0 && getNoFavouritesContent()}
             {favourites.map((id: string) => {
                 const event = allEvents
                     .flatMap((location) => location.events)

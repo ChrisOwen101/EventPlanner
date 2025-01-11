@@ -384,6 +384,8 @@ const App = () => {
           setSeenMailingList()
         }}
       >
+        <Text><b>Email Updates?</b></Text>
+        <br />
         <Text>My plan is to update this website every month or two. Want me to email when I update it?</Text>
         <br />
         <Group>
