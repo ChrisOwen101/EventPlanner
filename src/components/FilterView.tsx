@@ -27,35 +27,37 @@ const FilterView: React.FC<FilterViewProps> = ({ onFilterChange }) => {
     }
 
     return (
-        <fieldset className="cost-fieldset">
-            <p>Cost</p>
-            <div className="card card-body">
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        checked={showPaid}
-                        onChange={handlePaidChange}
-                        id="paidCheckbox"
-                    />
-                    <label className="form-check-label" htmlFor="paidCheckbox">
-                        Paid
-                    </label>
+        <div className='filter-view'>
+            <fieldset className="cost-fieldset">
+                <p>Cost</p>
+                <div className="card card-body">
+                    <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            checked={showPaid}
+                            onChange={handlePaidChange}
+                            id="paidCheckbox"
+                        />
+                        <label className="form-check-label" htmlFor="paidCheckbox">
+                            Paid
+                        </label>
+                    </div>
+                    <div className="form-check">
+                        <input
+                            className="form-check-input"
+                            type="checkbox"
+                            checked={showFree}
+                            onChange={handleFreeChange}
+                            id="freeCheckbox"
+                        />
+                        <label className="form-check-label" htmlFor="freeCheckbox">
+                            Free
+                        </label>
+                    </div>
                 </div>
-                <div className="form-check">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        checked={showFree}
-                        onChange={handleFreeChange}
-                        id="freeCheckbox"
-                    />
-                    <label className="form-check-label" htmlFor="freeCheckbox">
-                        Free
-                    </label>
-                </div>
-            </div>
-        </fieldset>
+            </fieldset>
+        </div>
     )
 }
 

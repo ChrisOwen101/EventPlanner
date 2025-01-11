@@ -1,20 +1,30 @@
 import React from 'react'
-import './FavouritesView.css'
+import { Button, Text } from '@mantine/core'
+import './DonationView.css'
 
 interface DonationViewProps {
 }
 
 const DonationView: React.FC<DonationViewProps> = () => {
     return (
-        <div className="offcanvas offcanvas-bottom" tabIndex={-1} id="offCanvasDonation" aria-labelledby="offcanvasExampleLabel">
-            <div className="offcanvas-header">
-                <h5 className="offcanvas-title" id="offcanvasExampleLabel">Thank you for considering a donation to Exhibitions.London</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div className="offcanvas-body">
-                <p>Your donation will help us to continue to run the site, keep our database updated and to add new features.</p>
-                <button type="button" className="btn btn-secondary" onClick={() => window.open("https://donate.stripe.com/6oEcP50X72Gm3rGbIJ", '_blank')}>Donate</button>
-            </div>
+        <div>
+            <Text size="lg" fw="bold" mb="md">
+                Thank you for considering a donation to Exhibitions.London
+            </Text>
+            <Text mb="md">
+                Hi! I'm <a href="https://www.linkedin.com/in/chrisowen101/" target="_blank" rel="noopener noreferrer">Chris</a> and I built this website. I'm a software engineer and I enjoy building things that help people. I build this website because I was perennially missing exhibitions that I wanted to see.
+                <br />
+                <br />
+
+                There are some small costs associated with running this website, so - if you find it useful - I would be grateful if you could consider donating. I've made it easy to donate using Stripe.
+            </Text>
+            <br />
+            <Button
+                variant="filled"
+                onClick={() => window.open("https://donate.stripe.com/6oEcP50X72Gm3rGbIJ", '_blank')}
+            >
+                Donate
+            </Button>
         </div>
     )
 }

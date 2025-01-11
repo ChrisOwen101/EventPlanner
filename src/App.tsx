@@ -1,4 +1,5 @@
 import './App.css'
+import '@mantine/core/styles.css'
 import { useState, useCallback, useEffect } from 'react'
 import NavBar from './NavBar'
 import Timeline, {
@@ -9,13 +10,13 @@ import Timeline, {
 } from 'react-calendar-timeline'
 import moment from 'moment'
 import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
-import { Offcanvas, Collapse } from 'bootstrap'
 import ItemView from './components/ItemView'
 import FavouritesView from './components/FavouritesView'
 import FilterView from './components/FilterView'
 import { getFavourites } from './tools/LocalStorage'
 import { renderStartEndTime } from './tools/TimeRenderer'
 import DonationView from './components/DonationView'
+import { Alert, Modal, Collapse, Drawer } from '@mantine/core'
 
 
 const App = () => {
@@ -28,6 +29,11 @@ const App = () => {
   const [favourites, setFavourites] = useState<string[]>(getFavourites())
 
   const isPhone = window.innerWidth <= 576
+
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [favouritesOpen, setFavouritesOpen] = useState(false)
+  const [donationOpen, setDonationOpen] = useState(false)
+  const [selectedEventOpen, setSelectedEventOpen] = useState(false)
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -129,50 +135,39 @@ const App = () => {
   }, [events, search, filterSettings])
 
   const getNoEventsFound = useCallback(() => {
-    return <div className="alert alert-warning" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
-      <h6>No events could be found for the search term "{search}"</h6>
-    </div>
-  }, [search, filterSettings])
+    return (
+      <Alert color="yellow" radius="md">
+        No events found for "{search}"
+      </Alert>
+    )
+  }, [search])
 
   const getLoading = useCallback(() => {
-    return <div className="alert alert-secondary" role="alert" style={{ marginLeft: '24px', marginRight: '24px', borderRadius: '12px', overflow: 'hidden', }}>
-      <h5>Loading...</h5>
-    </div>
+    return (
+      <Alert color="gray" radius="md" m="md">
+        Loading...
+      </Alert>
+    )
   }, [])
 
   const onClick = (itemId: string) => {
     const item = getItems().find(item => item.id === itemId)
     if (item) {
       setSelectedEvent(item.event)
-      const offcanvasElement = document.getElementById('offcanvasExample')
-      if (offcanvasElement) {
-        const offcanvas = new Offcanvas(offcanvasElement)
-        offcanvas.show()
-      }
+      setSelectedEventOpen(true)
     }
   }
 
   const onFavouriteClicked = () => {
-    const offcanvasElement = document.getElementById('offCanvasFavourites')
-    if (offcanvasElement) {
-      const offcanvas = new Offcanvas(offcanvasElement)
-      offcanvas.show()
-    }
+    setFavouritesOpen(true)
   }
 
   const onDonationClicked = () => {
-    const offcanvasElement = document.getElementById('offCanvasDonation')
-    if (offcanvasElement) {
-      const offcanvas = new Offcanvas(offcanvasElement)
-      offcanvas.show()
-    }
+    setDonationOpen(true)
   }
 
   const handleFilterClick = () => {
-    const collapseExample = document.getElementById('collapseExample')
-    if (collapseExample) {
-      new Collapse(collapseExample).toggle()
-    }
+    setFiltersOpen((prev) => !prev)
   }
 
   const calculateBackgroundColor = (end: moment.Moment) => {
@@ -247,17 +242,13 @@ const App = () => {
         onFavourite={onFavouriteClicked}
         onDonate={onDonationClicked} />
 
-      <div className="collapse" id="collapseExample" style={{
-        paddingLeft: '24px',
-        paddingRight: '24px',
-        paddingBottom: '24px',
-      }}>
+      <Collapse in={filtersOpen}>
         <FilterView
           onFilterChange={(filterSettings) => {
             setFilterSettings(filterSettings)
           }}
         />
-      </div>
+      </Collapse>
 
       {events.length === 0 ? getLoading() : noEventsSearched ? getNoEventsFound() :
         isPhone ? (
@@ -344,11 +335,34 @@ const App = () => {
           </div>
         )
       }
-      {selectedEvent && <ItemView selectedEvent={selectedEvent} onClose={() => {
-        setSelectedEvent(null)
-      }} />}
-      <FavouritesView allEvents={events} />
-      <DonationView />
+      <Drawer
+        opened={selectedEventOpen}
+        withCloseButton={false}
+        onClose={() => {
+          setSelectedEvent(null)
+          setSelectedEventOpen(false)
+        }}
+      >
+        {selectedEvent && (
+          <ItemView
+            selectedEvent={selectedEvent}
+            onClose={() => {
+              setSelectedEvent(null)
+              setSelectedEventOpen(false)
+            }}
+          />
+        )}
+      </Drawer>
+      <Drawer opened={favouritesOpen} position="right" onClose={() => setFavouritesOpen(false)} withCloseButton={false}>
+        <FavouritesView allEvents={events} />
+      </Drawer>
+      <Modal
+        opened={donationOpen}
+        onClose={() => setDonationOpen(false)}
+        title="Support Exhibitions.London"
+      >
+        <DonationView />
+      </Modal>
     </div>
   )
 }
