@@ -10,6 +10,7 @@ function NavBar({ onSearch, onFilter, onFavourite, onDonate }: { onSearch: (sear
 
     return (
         <div
+            className='custom-navbar'
             style={{
                 backgroundColor: '#324d37',
                 display: 'flex',
@@ -17,8 +18,6 @@ function NavBar({ onSearch, onFilter, onFavourite, onDonate }: { onSearch: (sear
                 alignItems: 'center',
                 padding: '8px 24px',
                 minHeight: 64,
-                margin: '24px',
-                borderRadius: '12px'
             }}
         >
             <div
