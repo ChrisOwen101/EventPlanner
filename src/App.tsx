@@ -400,7 +400,7 @@ const App = () => {
       >
         <Text><b>Email Updates?</b></Text>
         <br />
-        <Text>My plan is to update this website every month or two. Want me to email when I update it?</Text>
+        <Text>Exhibitions on this website will updated roughly every month. Want me to email when I update it?</Text>
         <br />
         <Group>
           <Button variant="filled" onClick={() => window.open('https://gaggle.email/join/london.exhibitions@gaggle.email', '_blank')}>Join Mailing List</Button>

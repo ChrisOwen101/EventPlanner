@@ -65,6 +65,13 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
 
             <div style={{ padding: '16px' }}>
                 <h1>{selectedEvent.name}</h1>
+                {selectedEvent.tags && (
+                    <div className="chip-container">
+                        {selectedEvent.tags.map((tag, index) => (
+                            <span key={index} className="chip">{tag}</span>
+                        ))}
+                    </div>
+                )}
                 <p><strong>Running:</strong> {renderStartEndTime(selectedEvent.start, selectedEvent.end)}</p>
                 <p><strong>Venue:</strong> {selectedEvent.location}</p>
                 <p><strong>Entry:</strong> {selectedEvent.cost}</p>
@@ -95,16 +102,6 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
                         />
                     </Menu>
                 </Stack>
-
-                <hr />
-
-                {selectedEvent.tags && (
-                    <div className="chip-container">
-                        {selectedEvent.tags.map((tag, index) => (
-                            <span key={index} className="chip">{tag}</span>
-                        ))}
-                    </div>
-                )}
             </div>
         </div>
     )
