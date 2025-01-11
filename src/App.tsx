@@ -367,7 +367,11 @@ const App = () => {
         )}
       </Drawer>
       <Drawer opened={favouritesOpen} position="right" onClose={() => setFavouritesOpen(false)} withCloseButton={false}>
-        <FavouritesView allEvents={events} />
+        <FavouritesView allEvents={events} onClose={
+          () => {
+            setFavouritesOpen(false)
+          }
+        } />
       </Drawer>
       <Modal
         opened={donationOpen}

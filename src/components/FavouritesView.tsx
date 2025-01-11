@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Title, Text } from '@mantine/core'
+import { Button, Title, Text, CloseButton } from '@mantine/core'
 import { renderStartEndTime } from '../tools/TimeRenderer'
 import { getFavourites } from '../tools/LocalStorage'
 import { Location } from '../networks/GoogleSheets'
@@ -8,10 +8,11 @@ import { FaHeart } from 'react-icons/fa6'
 
 
 interface FavouritesViewProps {
-    allEvents: Location[]
+    allEvents: Location[],
+    onClose: () => void
 }
 
-const FavouritesView: React.FC<FavouritesViewProps> = ({ allEvents }) => {
+const FavouritesView: React.FC<FavouritesViewProps> = ({ allEvents, onClose }) => {
     const favourites = getFavourites()
 
     const getNoFavouritesContent = () => {
@@ -26,6 +27,8 @@ const FavouritesView: React.FC<FavouritesViewProps> = ({ allEvents }) => {
 
     return (
         <div className="favourites-view">
+            <CloseButton size="xl" autoFocus={false} variant="transparent" style={{ zIndex: 1000, position: 'absolute', top: 0, right: 0, color: 'black', }} onClick={onClose} />
+
             <Title order={3}>Your Favourites</Title>
             <br />
             {favourites.length === 0 && getNoFavouritesContent()}
