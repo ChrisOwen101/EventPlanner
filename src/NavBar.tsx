@@ -17,6 +17,8 @@ function NavBar({ onSearch, onFilter, onFavourite, onDonate }: { onSearch: (sear
                 alignItems: 'center',
                 padding: '8px 24px',
                 minHeight: 64,
+                margin: '24px',
+                borderRadius: '12px'
             }}
         >
             <div
