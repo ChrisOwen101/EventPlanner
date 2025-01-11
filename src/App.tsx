@@ -17,6 +17,8 @@ import { getFavourites, seenMailingList, setSeenMailingList } from './tools/Loca
 import { renderStartEndTime } from './tools/TimeRenderer'
 import DonationView from './components/DonationView'
 import { Alert, Modal, Collapse, Drawer, Text, Button, Group } from '@mantine/core'
+import { MdOutlineMail } from 'react-icons/md'
+import MailingListView from './components/MailingListView'
 
 
 const App = () => {
@@ -31,6 +33,7 @@ const App = () => {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [favouritesOpen, setFavouritesOpen] = useState(false)
   const [donationOpen, setDonationOpen] = useState(false)
+  const [mailingListOpen, setMailingListOpen] = useState(false)
   const [selectedEventOpen, setSelectedEventOpen] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
 
@@ -249,7 +252,9 @@ const App = () => {
         onSearch={setSearch}
         onFilter={handleFilterClick}
         onFavourite={onFavouriteClicked}
-        onDonate={onDonationClicked} />
+        onDonate={onDonationClicked}
+        onMailingList={() => setMailingListOpen(true)}
+      />
 
       <Collapse in={filtersOpen}>
         <FilterView
@@ -371,6 +376,12 @@ const App = () => {
         title="Support Exhibitions.London"
       >
         <DonationView />
+      </Modal>
+      <Modal
+        opened={mailingListOpen}
+        onClose={() => setMailingListOpen(false)}
+      >
+        <MailingListView />
       </Modal>
       <Modal
         opened={showPopup}

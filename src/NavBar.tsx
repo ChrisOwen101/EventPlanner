@@ -1,12 +1,15 @@
 import { FaFilter, FaHeart } from 'react-icons/fa6'
 import { BiSolidDonateHeart } from "react-icons/bi"
+import { MdMarkEmailUnread } from "react-icons/md"
+
 
 import './navbar.css'
 import { Group, Button, TextInput } from '@mantine/core'
 
 
+function NavBar({ onSearch, onFilter, onFavourite, onDonate, onMailingList }: { onSearch: (search: string) => void, onFilter: () => void, onFavourite: () => void, onDonate: () => void, onMailingList: () => void }) {
 
-function NavBar({ onSearch, onFilter, onFavourite, onDonate }: { onSearch: (search: string) => void, onFilter: () => void, onFavourite: () => void, onDonate: () => void }) {
+    const iconSize = 18
 
     return (
         <div
@@ -35,9 +38,10 @@ function NavBar({ onSearch, onFilter, onFavourite, onDonate }: { onSearch: (sear
             <Group
                 style={{ marginLeft: 'auto' }}
             >
-                <Button variant="filled" onClick={onFavourite}><FaHeart /></Button>
-                <Button variant="filled" onClick={onFilter}><FaFilter /></Button>
-                <Button variant="filled" onClick={onDonate}><BiSolidDonateHeart /></Button>
+                <Button variant="filled" onClick={onFavourite}><FaHeart size={iconSize} /></Button>
+                <Button variant="filled" onClick={onFilter}><FaFilter size={iconSize} /></Button>
+                <Button variant="filled" onClick={onDonate}><BiSolidDonateHeart size={iconSize} /></Button>
+                <Button variant="filled" onClick={onMailingList}><MdMarkEmailUnread size={iconSize} /></Button>
                 <TextInput
                     placeholder="Search"
                     onChange={(e) => onSearch(e.currentTarget.value)}
