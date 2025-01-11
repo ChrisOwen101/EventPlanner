@@ -13,10 +13,10 @@ import { getEventsFromSheet, Location, Event } from './networks/GoogleSheets'
 import ItemView from './components/ItemView'
 import FavouritesView from './components/FavouritesView'
 import FilterView from './components/FilterView'
-import { getFavourites } from './tools/LocalStorage'
+import { getFavourites, seenMailingList, setSeenMailingList } from './tools/LocalStorage'
 import { renderStartEndTime } from './tools/TimeRenderer'
 import DonationView from './components/DonationView'
-import { Alert, Modal, Collapse, Drawer, Text } from '@mantine/core'
+import { Alert, Modal, Collapse, Drawer, Text, Button, Group } from '@mantine/core'
 
 
 const App = () => {
@@ -28,12 +28,11 @@ const App = () => {
 
   const [favourites, setFavourites] = useState<string[]>(getFavourites())
 
-  const isPhone = window.innerWidth <= 576
-
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [favouritesOpen, setFavouritesOpen] = useState(false)
   const [donationOpen, setDonationOpen] = useState(false)
   const [selectedEventOpen, setSelectedEventOpen] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -55,6 +54,15 @@ const App = () => {
       setEvents(events)
     }
     fetchData()
+  }, [])
+
+  useEffect(() => {
+    if (!seenMailingList()) {
+      const timer = setTimeout(() => {
+        setShowPopup(true)
+      }, 20000)
+      return () => clearTimeout(timer)
+    }
   }, [])
 
   const getFilteredEvents = useCallback(() => {
@@ -227,6 +235,7 @@ const App = () => {
   const groups = getGroups()
   const items = getItems()
   const noEventsSearched = (groups.length === 0 || items.length === 0) && search !== ''
+  const isPhone = window.innerWidth <= 576
 
   const startTime = isPhone ? moment().add(-2, 'month') : moment().add(-2.5, 'month')
   const endTime = isPhone ? moment().add(8, 'month') : moment().add(8, 'month')
@@ -346,6 +355,10 @@ const App = () => {
         {selectedEvent && (
           <ItemView
             selectedEvent={selectedEvent}
+            onClose={() => {
+              setSelectedEvent(null)
+              setSelectedEventOpen(false)
+            }}
           />
         )}
       </Drawer>
@@ -359,7 +372,26 @@ const App = () => {
       >
         <DonationView />
       </Modal>
-    </div>
+      <Modal
+        opened={showPopup}
+        onClose={() => setShowPopup(false)}
+        closeOnClickOutside={false}
+        trapFocus={false}
+        withOverlay={false}
+        lockScroll={false}
+        withCloseButton={false}
+        onEnterTransitionEnd={() => {
+          setSeenMailingList()
+        }}
+      >
+        <Text>My plan is to update this website every month or two. Want me to email when I update it?</Text>
+        <br />
+        <Group>
+          <Button variant="filled" onClick={() => window.open('https://gaggle.email/join/london.exhibitions@gaggle.email', '_blank')}>Join Mailing List</Button>
+          <Button variant="outline" onClick={() => setShowPopup(false)}>Close</Button>
+        </Group>
+      </Modal>
+    </div >
   )
 }
 export default App

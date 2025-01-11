@@ -44,3 +44,11 @@ export const getFavourites = () => {
     return getValue("favourites", [])
 }
 
+
+export const seenMailingList = () => {
+    return getValue("seenMailingList", false)
+}
+
+export const setSeenMailingList = () => {
+    setValue("seenMailingList", true)
+}

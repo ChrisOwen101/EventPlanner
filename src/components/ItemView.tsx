@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Stack, Menu, AspectRatio, Overlay } from '@mantine/core'
+import { Button, Stack, Menu, AspectRatio, Overlay, CloseButton } from '@mantine/core'
 import { Event } from '../networks/GoogleSheets'
 import { FaHeart } from 'react-icons/fa'
 import { renderStartEndTime } from '../tools/TimeRenderer'
@@ -9,9 +9,11 @@ import './ItemView.css' // retains any custom styles, e.g. for chips
 
 interface ItemViewProps {
     selectedEvent: Event | null
+    onClose: () => void
+
 }
 
-const ItemView: React.FC<ItemViewProps> = ({ selectedEvent }) => {
+const ItemView: React.FC<ItemViewProps> = ({ selectedEvent, onClose }) => {
     if (!selectedEvent) return null
 
     const onFavouriteClicked = () => {
@@ -52,12 +54,14 @@ const ItemView: React.FC<ItemViewProps> = ({ selectedEvent }) => {
                 <AspectRatio ratio={1}>
                     <img src={selectedEvent.image} alt="" style={{ width: '100%' }} />
                     <Overlay
-                        gradient="linear-gradient(145deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 100%)"
+                        gradient="linear-gradient(190deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 100%)"
                         opacity={0.85}
                     />
                 </AspectRatio>
 
             )}
+
+            <CloseButton size="xl" autoFocus={false} variant="transparent" style={{ zIndex: 1000, position: 'absolute', top: 0, right: 0, color: hasImage(selectedEvent.image) ? 'white' : 'black', }} onClick={onClose} />
 
             <div style={{ padding: '16px' }}>
                 <h1>{selectedEvent.name}</h1>
